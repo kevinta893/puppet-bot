@@ -21,6 +21,8 @@ namespace PuppetBotClient.Discord
         public event DiscordConnectionEvent Connected;
         public event DiscordUserUpdatedEvent UserUpdated;
 
+        public bool IsConnected => _discordClient.LoginState == LoginState.LoggedIn;
+
         public DiscordManager()
         {
             //_configuration = configuration;
@@ -31,6 +33,8 @@ namespace PuppetBotClient.Discord
             _discordClient.Ready += DiscordClient_Connected;
             _discordClient.CurrentUserUpdated += DiscordClient_CurrentUserUpdated;
         }
+
+        #region Discord Events
 
         private Task DiscordClient_CurrentUserUpdated(SocketSelfUser arg1, SocketSelfUser arg2)
         {
@@ -51,6 +55,8 @@ namespace PuppetBotClient.Discord
             return Task.CompletedTask;
         }
 
+        #endregion
+
         public async Task StartClientAsync()
         {
             if (_discordClient.LoginState != LoginState.LoggedOut)
@@ -67,8 +73,6 @@ namespace PuppetBotClient.Discord
         {
             await _discordClient.LogoutAsync();
         }
-
-        public bool IsConnected => _discordClient.LoginState == LoginState.LoggedIn;
 
         public async Task<DiscordUserViewModel> GetCurrentDiscordUser()
         {

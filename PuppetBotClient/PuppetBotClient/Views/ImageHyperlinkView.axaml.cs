@@ -44,6 +44,11 @@ namespace PuppetBotClient.Views
             HyperlinkToolTipText.PointerPressed += HoverTextBackground_PointerPressed;
         }
 
+        private void InitializeComponent()
+        {
+            AvaloniaXamlLoader.Load(this);
+        }
+
         public IBitmap ImageSource
         {
             get
@@ -67,6 +72,32 @@ namespace PuppetBotClient.Views
                 HyperlinkToolTipText.Text = value;
             }
         }
+
+        private bool IsHover
+        {
+            get
+            {
+                return _isHover;
+            }
+            set
+            {
+                _isHover = value;
+                if (string.IsNullOrWhiteSpace(HyperLink))
+                {
+                    // No link
+                    HyperlinkToolTipText.Cursor = Arrow;
+                    HoverTextBackground.Cursor = Arrow;
+                    ShowHoverText(false);
+                    return;
+                }
+
+                HyperlinkToolTipText.Cursor = Hand;
+                HoverTextBackground.Cursor = Hand;
+                ShowHoverText(_isHover);
+            }
+        }
+
+        #region UI Events
 
         private void HoverTextBackground_PointerPressed(object sender, Avalonia.Input.PointerPressedEventArgs e)
         {
@@ -103,28 +134,7 @@ namespace PuppetBotClient.Views
             IsHover = true;
         }
 
-        private bool IsHover { 
-            get 
-            {
-                return _isHover;
-            } 
-            set 
-            {
-                _isHover = value;
-                if (string.IsNullOrWhiteSpace(HyperLink))
-                {
-                    // No link
-                    HyperlinkToolTipText.Cursor = Arrow;
-                    HoverTextBackground.Cursor = Arrow;
-                    ShowHoverText(false);
-                    return;
-                }
-
-                HyperlinkToolTipText.Cursor = Hand;
-                HoverTextBackground.Cursor = Hand;
-                ShowHoverText(_isHover);
-            } 
-        }
+        #endregion
 
         /// <summary>
         /// Displays 
@@ -144,11 +154,6 @@ namespace PuppetBotClient.Views
                 HyperlinkToolTipText.IsVisible = false;
                 HoverTextBackground.Fill = NoHoverFillColor;
             }
-        }
-
-        private void InitializeComponent()
-        {
-            AvaloniaXamlLoader.Load(this);
         }
     }
 }

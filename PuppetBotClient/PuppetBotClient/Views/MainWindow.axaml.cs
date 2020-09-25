@@ -41,7 +41,6 @@ namespace PuppetBotClient.Views
             // Events
             SendMessageButton.Click += SendMessageButton_Clicked;
             MessageTextBox.KeyUp += MessageTextBox_EnterPressed;
-            DiscordConnectionView.RefreshButtonClicked += DiscordConnectionView_RefreshButtonClicked;
 
             // Discord
             _discordManager.Connected += DiscordManager_Connected;
@@ -51,6 +50,13 @@ namespace PuppetBotClient.Views
             this.Initialized += MainWindow_Initialized;
             StartDiscordConnection();
         }
+
+        private void InitializeComponent()
+        {
+            AvaloniaXamlLoader.Load(this);
+        }
+
+        #region Discord Events
 
         private void DiscordManager_Connected()
         {
@@ -84,42 +90,16 @@ namespace PuppetBotClient.Views
             });
         }
 
-        private void DiscordConnectionView_RefreshButtonClicked(object sender, RoutedEventArgs e)
-        {
-            RefreshDiscordConnection();
-        }
+        #endregion
 
-        private void RefreshDiscordConnection()
-        {
-            StartDiscordConnection();
-        }
-
-        private async void StartDiscordConnection()
-        {
-            try
-            {
-                await _discordManager.StartClientAsync();
-            }
-            catch (HttpException ex) when (ex.HttpCode == System.Net.HttpStatusCode.Unauthorized)
-            {
-                AddMessageHistory("Bad client token. Unauthorized.");
-            }
-            catch (Exception ex)
-            {
-                AddMessageHistory($"Error! Exception:{ex}");
-
-            }
-        }
+        #region UI Events
 
         private void MainWindow_Initialized(object sender, EventArgs e)
         {
             MessageTextBox.Focus();
         }
 
-        private void InitializeComponent()
-        {
-            AvaloniaXamlLoader.Load(this);
-        }
+
         
         public void SendMessageButton_Clicked(object sender, RoutedEventArgs e)
         {
@@ -150,6 +130,25 @@ namespace PuppetBotClient.Views
             }
 
             SendMessage();
+        }
+
+        #endregion
+
+        private async void StartDiscordConnection()
+        {
+            try
+            {
+                await _discordManager.StartClientAsync();
+            }
+            catch (HttpException ex) when (ex.HttpCode == System.Net.HttpStatusCode.Unauthorized)
+            {
+                AddMessageHistory("Bad client token. Unauthorized.");
+            }
+            catch (Exception ex)
+            {
+                AddMessageHistory($"Error! Exception:{ex}");
+
+            }
         }
 
         public async void SendMessage()

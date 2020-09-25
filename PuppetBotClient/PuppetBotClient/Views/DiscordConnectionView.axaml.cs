@@ -41,9 +41,6 @@ namespace PuppetBotClient.Views
                 return SelectChannelComboBox.SelectedItem as DiscordChannelViewModel;
             }
         }
-
-        public event EventHandler<RoutedEventArgs> RefreshButtonClicked;
-
         public DiscordConnectionView()
         {
             this.InitializeComponent();
