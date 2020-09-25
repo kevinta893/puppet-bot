@@ -1,6 +1,6 @@
 ﻿using Discord;
 using Discord.WebSocket;
-using Microsoft.Extensions.Configuration;
+using PuppetBotClient.Util;
 using PuppetBotClient.ViewModels.Discord;
 using System;
 using System.Collections.Generic;
@@ -16,7 +16,6 @@ namespace PuppetBotClient.Discord
     public class DiscordManager
     {
         private readonly DiscordSocketClient _discordClient;
-        private readonly IConfiguration _configuration;
 
         public event DiscordDisconnectionEvent Disconnected;
         public event DiscordConnectionEvent Connected;
@@ -59,8 +58,8 @@ namespace PuppetBotClient.Discord
                 return;
             }
 
-            //TODO use config file for token
-            await _discordClient.LoginAsync(TokenType.Bot, "TODO PUT TOKEN IN CONFIG FILE");
+            var botToken = AppConfiguration.Settings.Discord.BotToken;
+            await _discordClient.LoginAsync(TokenType.Bot, botToken);
             await _discordClient.StartAsync();
         }
 
