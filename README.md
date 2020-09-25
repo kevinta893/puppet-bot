@@ -1,3 +1,5 @@
+![](https://github.com/kevinta893/puppet-bot/workflows/Build/badge.svg)
+
 # puppet-bot
 A puppeteering bot that lets you send messages to Discord with a simple chat interface.
 

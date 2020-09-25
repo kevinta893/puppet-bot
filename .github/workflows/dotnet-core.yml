@@ -1,0 +1,46 @@
+name: Build
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 3.1.301
+    - name: Install dependencies
+      run: |
+        cd PuppetBotClient
+        dotnet restore
+    - name: Build
+      run: |
+        cd PuppetBotClient
+        dotnet build --configuration Release --no-restore --nologo
+    - name: Publish
+      run: |
+        cd PuppetBotClient
+        dotnet publish -r win-x86 --configuration Release --nologo -p:PublishSingleFile=true --self-contained true -o ./Publish
+        rm ./Publish/*.pdb
+        cp ../README.md ./Publish
+        cp ../LICENSE ./Publish
+        cp ./PuppetBotClient/appsettings.json ./Publish
+    - name: Package Release
+      run: |
+        cd PuppetBotClient
+        zip -r PuppetBotClient-x86.zip ./Publish
+        ls ./Publish
+    - name: Release Package
+      uses: svenstaro/upload-release-action@2.1.1
+      with:
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        file: ./PuppetBotClient/PuppetBotClient-x86.zip
+        tag: "1.0"
