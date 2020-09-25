@@ -1,0 +1,16 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="PuppetBotClient.Views.ImageHyperlinkView"
+             Width="70" Height="70">
+  <Canvas>
+    <Rectangle Name="UserAvatarBackground" Width="70" Height="70" Fill="White"/>
+    <Image Name="UserAvatarImage" Width="70" Height="70" Stretch="Uniform" />
+    <Grid>
+      <Rectangle Name="HoverTextBackground" Width="70" Height="70" Cursor="Hand" Fill="#00000000" />
+      <TextBlock Name="HyperlinkToolTipText" HorizontalAlignment="Center" VerticalAlignment="Center" Cursor="Hand" Foreground="White" TextAlignment="Center" IsVisible="false"></TextBlock>
+    </Grid>
+  </Canvas>
+</UserControl>

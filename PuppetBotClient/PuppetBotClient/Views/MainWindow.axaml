@@ -1,0 +1,32 @@
+﻿<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="clr-namespace:PuppetBotClient.ViewModels;assembly=PuppetBotClient"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="450" d:DesignHeight="400"
+        xmlns:views="clr-namespace:PuppetBotClient.Views"
+        x:Class="PuppetBotClient.Views.MainWindow"
+        Icon="/Assets/avalonia-logo.ico"
+        Title="PuppetBot"
+        Width="450" Height="400" CanResize="False">
+
+    <Design.DataContext>
+        <vm:MainWindowViewModel/>
+    </Design.DataContext>
+
+  <Canvas>
+    <views:DiscordConnectionView Name="DiscordConnectionView" />
+    <Border BorderBrush="Green"
+        BorderThickness="1"
+        CornerRadius="2"
+        Padding="4" 
+        Canvas.Top="100" Canvas.Left="10">
+      <ScrollViewer Name="MessageHistoryScrollViewer" VerticalScrollBarVisibility="Visible" Width="420" Height="150">
+        <TextBlock Name="MessageHistoryTextBlock" Width="420" TextWrapping="Wrap"></TextBlock>
+      </ScrollViewer>
+    </Border>
+    <TextBox Name="MessageTextBox" Width="390" Height="100" Canvas.Bottom="10" Canvas.Left="10"/>
+    <Button Name="SendMessageButton" Height="100" Canvas.Bottom="10" Canvas.Right="10">Send</Button>
+    <CheckBox Name="PressEnterSendCheckbox" Canvas.Bottom="115" Canvas.Left="10" IsChecked="false">Press enter to end</CheckBox>
+  </Canvas>
+</Window>

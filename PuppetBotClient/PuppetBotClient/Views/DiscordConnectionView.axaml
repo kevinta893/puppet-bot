@@ -1,0 +1,22 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:views="clr-namespace:PuppetBotClient.Views"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="PuppetBotClient.Views.DiscordConnectionView"
+             Width="450" Height="100">
+  <Canvas>
+    <TextBlock Name="UsernameText" Canvas.Left="10" FontWeight="Bold">Username</TextBlock>
+    <views:ImageHyperlinkView Name="UserAvatarImage" Width="70" Height="70" Canvas.Left="10" Canvas.Top="20"/>
+    <Canvas Left="175">
+      <TextBlock Canvas.Top="10">Server:</TextBlock>
+      <ComboBox Name="SelectServerComboBox" Canvas.Top="25" IsEnabled="False"></ComboBox>
+      <TextBlock Canvas.Top="50">Channel:</TextBlock>
+      <ComboBox Name="SelectChannelComboBox" Canvas.Top="70" IsEnabled="False"></ComboBox>
+    </Canvas>
+    <Image Name="DiscordDisconnectedIndicator" Width="20" Height="20" Canvas.Right="10" Canvas.Top="10" Stretch="Fill" Source="/Assets/red_circle.png" />
+    <Image Name="DiscordConnectingIndicator" Width="20" Height="20" Canvas.Right="10" Canvas.Top="10" Stretch="Fill" Source="/Assets/yellow_circle.png" IsVisible="False"/>
+    <Image Name="DiscordConnectedIndicator" Width="20" Height="20" Canvas.Right="10" Canvas.Top="10" Stretch="Fill" Source="/Assets/green_circle.png" IsVisible="False"/>
+  </Canvas>
+</UserControl>
