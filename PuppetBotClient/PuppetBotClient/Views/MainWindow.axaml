@@ -25,7 +25,7 @@
         <TextBlock Name="MessageHistoryTextBlock" Width="420" TextWrapping="Wrap"></TextBlock>
       </ScrollViewer>
     </Border>
-    <TextBox Name="MessageTextBox" Width="390" Height="100" Canvas.Bottom="10" Canvas.Left="10"/>
+    <TextBox Name="MessageTextBox" AcceptsReturn="True" Width="390" Height="100" Canvas.Bottom="10" Canvas.Left="10"/>
     <Button Name="SendMessageButton" Height="100" Canvas.Bottom="10" Canvas.Right="10">Send</Button>
     <CheckBox Name="PressEnterSendCheckbox" Canvas.Bottom="115" Canvas.Left="10" IsChecked="false">Press enter to end</CheckBox>
   </Canvas>

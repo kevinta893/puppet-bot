@@ -42,7 +42,6 @@ namespace PuppetBotClient.Views
             SendMessageButton.Click += SendMessageButton_Clicked;
             MessageTextBox.KeyUp += MessageTextBox_EnterPressed;
             DiscordConnectionView.RefreshButtonClicked += DiscordConnectionView_RefreshButtonClicked;
-            this.KeyUp += MainWindow_KeyUp;
 
             // Discord
             _discordManager.Connected += DiscordManager_Connected;
@@ -51,16 +50,6 @@ namespace PuppetBotClient.Views
 
             this.Initialized += MainWindow_Initialized;
             StartDiscordConnection();
-        }
-
-        private void MainWindow_KeyUp(object sender, KeyEventArgs e)
-        {
-            if (e.Key != Key.Enter)
-            {
-                return;
-            }
-
-            RefreshDiscordConnection();
         }
 
         private void DiscordManager_Connected()
@@ -140,6 +129,11 @@ namespace PuppetBotClient.Views
         public void MessageTextBox_EnterPressed(object sender, KeyEventArgs e)
         {
             if (e.Key != Key.Enter)
+            {
+                return;
+            }
+
+            if (e.KeyModifiers == KeyModifiers.Shift)
             {
                 return;
             }
