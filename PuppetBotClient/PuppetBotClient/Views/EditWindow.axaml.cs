@@ -36,8 +36,22 @@ namespace PuppetBotClient.Views
             // Events
             GetMessageButton.Click += GetMessageButton_Click;
             EditMessageButton.Click += EditMessageButton_Click;
+            MessageTextBox.KeyUp += MessageTextBox_KeyUp;
 
             // Window setup
+            EnableEditMessageControls(false);
+        }
+
+        private void MessageTextBox_KeyUp(object sender, Avalonia.Input.KeyEventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(MessageTextBox.Text))
+            {
+                EditMessageButton.IsEnabled = false;
+            }
+            else
+            {
+                EditMessageButton.IsEnabled = true;
+            }
         }
 
         public void SetDiscordManager(DiscordManager discordManager)
@@ -52,23 +66,52 @@ namespace PuppetBotClient.Views
 
         private void EditMessageButton_Click(object sender, Avalonia.Interactivity.RoutedEventArgs e)
         {
-
+            Dispatcher.UIThread.InvokeAsync(async () => {
+                try
+                {
+                    ulong.TryParse(ChannelIdTextBox.Text, out ulong channelId);
+                    ulong.TryParse(MessageIdTextBox.Text, out ulong messageId);
+                    var editedMessage = MessageTextBox.Text;
+                    await _discordManager.EditMessageAsync(channelId, messageId, editedMessage);
+                }
+                catch (Exception ex)
+                {
+                    MessageDisplayTextBlock.Text = $"Error: {ex.Message}";
+                }
+            });
         }
 
         private void GetMessageButton_Click(object sender, Avalonia.Interactivity.RoutedEventArgs e)
         {
-            try
-            {
-                ulong.TryParse(ChannelIdTextBox.Text, out ulong channelId);
-                ulong.TryParse(MessageIdTextBox.Text, out ulong messageId);
-                var message = _discordManager.GetMessageAsync(channelId, messageId).Result;
-                MessageDisplayTextBlock.Text = message.Content;
-                MessageTextBox.Text = message.Content;
-            }
-            catch (Exception ex)
-            {
-                MessageDisplayTextBlock.Text = $"Error: {ex.Message}";
-            }
+            EnableEditMessageControls(false);
+            Dispatcher.UIThread.InvokeAsync(async () => {
+                try
+                {
+                    ulong.TryParse(ChannelIdTextBox.Text, out ulong channelId);
+                    ulong.TryParse(MessageIdTextBox.Text, out ulong messageId);
+                    var message = await _discordManager.GetMessageAsync(channelId, messageId);
+                    if (message == null)
+                    {
+                        MessageDisplayTextBlock.Text = $"Error: Invalid message Id or channel Id";
+                        return;
+                    }
+
+                    MessageDisplayTextBlock.Text = message.Content;
+                    MessageTextBox.Text = message.Content;
+                    EnableEditMessageControls(true);
+                }
+                catch (Exception ex)
+                {
+                    EnableEditMessageControls(false);
+                    MessageDisplayTextBlock.Text = $"Error: {ex.Message}";
+                }
+            });
+        }
+
+        private void EnableEditMessageControls(bool enabled)
+        {
+            MessageTextBox.IsEnabled = enabled;
+            EditMessageButton.IsEnabled = enabled;
         }
 
         private void InitializeComponent()

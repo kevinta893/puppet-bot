@@ -70,6 +70,7 @@ namespace PuppetBotClient.Views
                 DiscordConnectionView.SetUserViewModel(currentUser);
                 DiscordConnectionView.SetChannelSelectionModel(serverSelection);
                 AddMessageHistory($"Connected as {currentUser.Username}");
+                EditMessageButton.IsEnabled = true;
             });
         }
 
@@ -78,6 +79,7 @@ namespace PuppetBotClient.Views
             Dispatcher.UIThread.InvokeAsync(() =>
             {
                 DiscordConnectionView.SetConnectionStatus(DiscordConnectionView.ConnectionStatus.Disconnected);
+                EditMessageButton.IsEnabled = false;
                 if (ex != null)
                 {
                     AddMessageHistory($"Disconnect Error! ${ex.Message}");
@@ -85,7 +87,7 @@ namespace PuppetBotClient.Views
             });
         }
 
-        private void DiscordManager_UserUpdated(ViewModels.Discord.DiscordUserViewModel updatedUser)
+        private void DiscordManager_UserUpdated(DiscordUserViewModel updatedUser)
         {
             Dispatcher.UIThread.InvokeAsync(() =>
             {

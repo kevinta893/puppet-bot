@@ -4,7 +4,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d" d:DesignWidth="450" d:DesignHeight="400"
         x:Class="PuppetBotClient.Views.EditWindow"
-        Title="EditWindow">
+        Icon="/Assets/avalonia-logo.ico"
+        Title="EditWindow"
+        Width="450" Height="400" CanResize="False">
   
   <Canvas>
     <Border BorderBrush="Green"
@@ -12,8 +14,8 @@
         CornerRadius="2"
         Padding="4"
         Canvas.Top="100" Canvas.Left="10">
-      <ScrollViewer Name="MessageDisplayScrollViewer" VerticalScrollBarVisibility="Visible" Width="420" Height="150">
-        <TextBlock Name="MessageDisplayTextBlock" Width="420" TextWrapping="Wrap"></TextBlock>
+      <ScrollViewer Name="MessageDisplayScrollViewer" VerticalScrollBarVisibility="Visible" Width="420" Height="80">
+        <TextBlock Name="MessageDisplayTextBlock" Padding="10,0,0,0" Width="420" TextWrapping="Wrap"></TextBlock>
       </ScrollViewer>
     </Border>
     <Label Canvas.Top="10" Canvas.Left="10">Channel Id</Label>
@@ -22,7 +24,7 @@
     <TextBox Name="MessageIdTextBox" Width="150" Height="30" Canvas.Top="50" Canvas.Left="100"/>
     <Button Name="GetMessageButton" Height="30" Canvas.Top="50" Canvas.Right="115">Get Message</Button>
 
-    <TextBox Name="MessageTextBox" AcceptsReturn="True" Width="390" Height="100" Canvas.Bottom="10" Canvas.Left="10"/>
-    <Button Name="EditMessageButton" Height="100" Canvas.Bottom="10" Canvas.Right="10">Edit</Button>
+    <TextBox Name="MessageTextBox" AcceptsReturn="True" Width="390" Height="180" Canvas.Bottom="10" Canvas.Left="10" IsEnabled="false"/>
+    <Button Name="EditMessageButton" Height="180" Canvas.Bottom="10" Canvas.Right="10" IsEnabled="false">Edit</Button>
   </Canvas>
 </Window>
