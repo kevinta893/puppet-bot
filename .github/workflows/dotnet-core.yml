@@ -44,3 +44,4 @@ jobs:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
         file: ./PuppetBotClient/PuppetBotClient-x86.zip
         tag: ${{ github.ref }}
+        overwrite: true
