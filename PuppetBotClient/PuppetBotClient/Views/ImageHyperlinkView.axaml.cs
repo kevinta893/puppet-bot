@@ -49,7 +49,7 @@ namespace PuppetBotClient.Views
             AvaloniaXamlLoader.Load(this);
         }
 
-        public IBitmap ImageSource
+        public IImage ImageSource
         {
             get
             {

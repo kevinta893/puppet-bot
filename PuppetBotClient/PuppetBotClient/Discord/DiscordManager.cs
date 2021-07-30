@@ -143,5 +143,19 @@ namespace PuppetBotClient.Discord
             var channel = _discordClient.GetChannel(channelId) as IMessageChannel;
             await channel.SendMessageAsync(message);
         }
+
+        public async Task<IMessage> GetMessageAsync(ulong channelId, ulong messageId)
+        {
+            var channel = _discordClient.GetChannel(channelId) as IMessageChannel;
+            var message = await channel.GetMessageAsync(messageId);
+            return message;
+        }
+
+        public async Task EditMessageAsync(ulong channelId, ulong messageId, string editedMessage)
+        {
+            var channel = _discordClient.GetChannel(channelId) as IMessageChannel;
+            var message = await channel.GetMessageAsync(messageId) as IUserMessage;
+            await message.ModifyAsync(msg => msg.Content = editedMessage);
+        }
     }
 }

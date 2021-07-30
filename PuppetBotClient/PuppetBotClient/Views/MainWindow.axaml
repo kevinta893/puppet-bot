@@ -22,11 +22,12 @@
         Padding="4" 
         Canvas.Top="100" Canvas.Left="10">
       <ScrollViewer Name="MessageHistoryScrollViewer" VerticalScrollBarVisibility="Visible" Width="420" Height="150">
-        <TextBlock Name="MessageHistoryTextBlock" Width="420" TextWrapping="Wrap"></TextBlock>
+        <TextBlock Name="MessageHistoryTextBlock" Padding="10,0,0,0" Width="420" TextWrapping="Wrap"></TextBlock>
       </ScrollViewer>
     </Border>
     <TextBox Name="MessageTextBox" AcceptsReturn="True" Width="390" Height="100" Canvas.Bottom="10" Canvas.Left="10"/>
     <Button Name="SendMessageButton" Height="100" Canvas.Bottom="10" Canvas.Right="10">Send</Button>
+    <Button Name="EditMessageButton" Height="30" Canvas.Top="65" Canvas.Right="10" IsEnabled="False">Edit Msg</Button>
     <CheckBox Name="PressEnterSendCheckbox" Canvas.Bottom="115" Canvas.Left="10" IsChecked="false">Press enter to end</CheckBox>
   </Canvas>
 </Window>

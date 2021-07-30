@@ -6,6 +6,7 @@ using Avalonia.Markup.Xaml;
 using Avalonia.Threading;
 using Discord.Net;
 using PuppetBotClient.Discord;
+using PuppetBotClient.ViewModels.Discord;
 using System;
 
 namespace PuppetBotClient.Views
@@ -15,6 +16,7 @@ namespace PuppetBotClient.Views
         private DiscordConnectionView DiscordConnectionView { get; }
         private CheckBox PressEnterSendCheckbox { get; }
         private Button SendMessageButton { get; }
+        private Button EditMessageButton { get; }
         private TextBox MessageTextBox { get; }
         private TextBlock MessageHistoryTextBlock { get; }
         private ScrollViewer MessageHistoryScrollViewer { get; }
@@ -24,9 +26,7 @@ namespace PuppetBotClient.Views
         public MainWindow()
         {
             InitializeComponent();
-#if DEBUG
-            this.AttachDevTools();
-#endif
+
             //_discordManager = discordManager;
             _discordManager = new DiscordManager();
 
@@ -34,12 +34,15 @@ namespace PuppetBotClient.Views
             DiscordConnectionView = this.Find<DiscordConnectionView>(nameof(DiscordConnectionView));
             PressEnterSendCheckbox = this.Find<CheckBox>(nameof(PressEnterSendCheckbox));
             SendMessageButton = this.Find<Button>(nameof(SendMessageButton));
+            EditMessageButton = this.Find<Button>(nameof(EditMessageButton));
             MessageTextBox = this.Find<TextBox>(nameof(MessageTextBox));
             MessageHistoryTextBlock = this.Find<TextBlock>(nameof(MessageHistoryTextBlock));
             MessageHistoryScrollViewer = this.Find<ScrollViewer>(nameof(MessageHistoryScrollViewer));
 
+
             // Events
             SendMessageButton.Click += SendMessageButton_Clicked;
+            EditMessageButton.Click += EditMessageButton_Click;
             MessageTextBox.KeyUp += MessageTextBox_EnterPressed;
 
             // Discord
@@ -67,6 +70,7 @@ namespace PuppetBotClient.Views
                 DiscordConnectionView.SetUserViewModel(currentUser);
                 DiscordConnectionView.SetChannelSelectionModel(serverSelection);
                 AddMessageHistory($"Connected as {currentUser.Username}");
+                EditMessageButton.IsEnabled = true;
             });
         }
 
@@ -75,6 +79,7 @@ namespace PuppetBotClient.Views
             Dispatcher.UIThread.InvokeAsync(() =>
             {
                 DiscordConnectionView.SetConnectionStatus(DiscordConnectionView.ConnectionStatus.Disconnected);
+                EditMessageButton.IsEnabled = false;
                 if (ex != null)
                 {
                     AddMessageHistory($"Disconnect Error! ${ex.Message}");
@@ -82,7 +87,7 @@ namespace PuppetBotClient.Views
             });
         }
 
-        private void DiscordManager_UserUpdated(ViewModels.Discord.DiscordUserViewModel updatedUser)
+        private void DiscordManager_UserUpdated(DiscordUserViewModel updatedUser)
         {
             Dispatcher.UIThread.InvokeAsync(() =>
             {
@@ -99,11 +104,23 @@ namespace PuppetBotClient.Views
             MessageTextBox.Focus();
         }
 
-
-        
         public void SendMessageButton_Clicked(object sender, RoutedEventArgs e)
         {
             SendMessage();
+        }
+
+        private void EditMessageButton_Click(object sender, RoutedEventArgs e)
+        {
+            var channelId = DiscordConnectionView.SelectedChannel.ChannelId;
+            var editViewModel = new DiscordEditMessageViewModel()
+            {
+                ChannelId = channelId,
+            };
+
+            var editWindow = new EditWindow();
+            editWindow.SetDiscordManager(_discordManager);
+            editWindow.SetEditViewModel(editViewModel);
+            editWindow.Show();
         }
 
         public void MessageTextBox_EnterPressed(object sender, KeyEventArgs e)
