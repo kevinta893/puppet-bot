@@ -39,8 +39,8 @@ jobs:
         zip -r PuppetBotClient-x86.zip ./Publish
         ls ./Publish
     - name: Release Package
-      uses: svenstaro/upload-release-action@2.1.1
+      uses: svenstaro/upload-release-action@2.2.1
       with:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
         file: ./PuppetBotClient/PuppetBotClient-x86.zip
-        tag: "1.0"
+        tag: ${{ github.ref }}
