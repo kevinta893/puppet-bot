@@ -14,3 +14,7 @@ A puppeteering bot that lets you send messages to Discord with a simple chat int
 ## Using the Client app
 
 Enter a valid bot token in the included *appsettings.json* file to get started. Run the app to get started! Select a server and channel to start sending messages.
+
+## Editing a message
+
+First select a channel from the server that contains the message you want to edit. Then copy the ID of the message you want to edit from Discord and paste it into the new edit window. Click on the `Get message` button and you should see your message appear and ready to edit.
