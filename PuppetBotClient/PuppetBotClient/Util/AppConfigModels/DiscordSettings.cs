@@ -2,6 +2,6 @@
 {
     public class DiscordSettings
     {
-        public string BotToken { get; set; }
+        public string[] BotTokens { get; set; }
     }
 }
