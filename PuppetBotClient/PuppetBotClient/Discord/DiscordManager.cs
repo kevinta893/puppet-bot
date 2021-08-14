@@ -111,10 +111,8 @@ namespace PuppetBotClient.Discord
                 var channels = await GetAllTextChannelsAsync(server);
                 allChannels.AddRange(channels);
             }
-            //await Task.WhenAll(allChannels);
 
             var channelDictionary = allChannels
-                //.SelectMany(channels => channels)
                 .GroupBy(channel => channel.GuildId)
                 .ToDictionary(g => g.Key, g => g.ToList());
 
@@ -124,7 +122,7 @@ namespace PuppetBotClient.Discord
                 {
                     Name = server.Name,
                     ServerId = server.Id,
-                    Channels = channelDictionary[server.Id].Select(channel => new DiscordChannelViewModel
+                    Channels = channelDictionary[server.Id].OrderBy(c => c.Position).Select(channel => new DiscordChannelViewModel
                     {
                         Name = channel.Name,
                         ChannelId = channel.Id,
