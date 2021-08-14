@@ -24,7 +24,7 @@ namespace PuppetBotClient.Views
         private ComboBox SelectServerComboBox { get; }
         private ComboBox SelectChannelComboBox { get; }
 
-        private IDictionary<ConnectionStatus, Image> _connectionStatusIcons;
+        private readonly IReadOnlyDictionary<ConnectionStatus, Image> _connectionStatusIcons;
 
         public DiscordServerViewModel SelectedServer 
         { 
@@ -94,6 +94,7 @@ namespace PuppetBotClient.Views
                 SelectChannelComboBox.Items = Enumerable.Empty<DiscordChannelSelectionViewModel>();
                 var selectedServer = SelectServerComboBox.SelectedItem as DiscordServerViewModel;
                 SelectChannelComboBox.Items = selectedServer.Channels;
+                SelectChannelComboBox.SelectedIndex = 0;
             };
 
             SetControlsIsEnabled(true);
