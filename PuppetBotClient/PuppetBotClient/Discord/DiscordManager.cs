@@ -2,6 +2,7 @@
 using Discord.WebSocket;
 using PuppetBotClient.Util;
 using PuppetBotClient.ViewModels.Discord;
+using PuppetBotClient.ViewModels.Emoji;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -102,7 +103,7 @@ namespace PuppetBotClient.Discord
             return discordUser;
         }
 
-        public async Task<DiscordChannelSelectionViewModel> GetServerSelection()
+        public async Task<DiscordChannelSelectionViewModel> GetServerChannelSelection()
         {
             var invitedServers = await GetInvitedServersAsync();
             var allChannels = new List<ITextChannel>();
@@ -134,13 +135,47 @@ namespace PuppetBotClient.Discord
             return serverSelection;
         }
 
-        public async Task<IEnumerable<IGuild>> GetInvitedServersAsync()
+        public async Task<IEnumerable<ServerEmojisViewModel>> GetServerEmojis()
+        {
+            var invitedGuilds = await GetInvitedServersAsync();
+
+            var emojiTasks = invitedGuilds.Select(guild => GetServerEmoji(guild.Id)).ToList();
+            var emojiViewModels = await Task.WhenAll(emojiTasks);
+
+            return emojiViewModels;
+        }
+
+        public async Task<ServerEmojisViewModel> GetServerEmoji(ulong guildId) 
+        {
+            var guild = _discordClient.GetGuild(guildId);
+            if (guild == null)
+            {
+                throw new ArgumentException($"Unknown Guild. Id={guildId}");
+            }
+
+            var emojis = await guild.GetEmotesAsync();
+
+            return new ServerEmojisViewModel()
+            {
+                GuildId = guild.Id,
+                Name = guild.Name,
+                Emojis = emojis.Select(emoji => new EmojiViewModel()
+                {
+                    EmojiId = emoji.Id,
+                    Alias = emoji.Name,
+                    Animated = emoji.Animated,
+                    ImageUrl = emoji.Url,
+                })
+            };
+        }
+
+        private async Task<IEnumerable<IGuild>> GetInvitedServersAsync()
         {
             var guilds = await (_discordClient as IDiscordClient).GetGuildsAsync();
             return guilds;
         }
 
-        public async Task<IEnumerable<ITextChannel>> GetAllTextChannelsAsync(IGuild guild)
+        private async Task<IEnumerable<ITextChannel>> GetAllTextChannelsAsync(IGuild guild)
         {
             var guildTextChannels = await guild.GetTextChannelsAsync();
             return guildTextChannels;

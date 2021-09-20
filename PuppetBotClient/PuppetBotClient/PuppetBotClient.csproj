@@ -25,6 +25,9 @@
     <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="5.0.0" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\PuppetBotClient.ImageCache\PuppetBotClient.ImageCache.csproj" />
+  </ItemGroup>
+  <ItemGroup>
     <AvaloniaXaml Update="Views\MainWindow.axaml">
       <Generator>MSBuild:Compile</Generator>
     </AvaloniaXaml>

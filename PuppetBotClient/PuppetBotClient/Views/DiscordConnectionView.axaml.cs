@@ -2,6 +2,7 @@
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.Media.Imaging;
+using PuppetBotClient.Util;
 using PuppetBotClient.ViewModels.Discord;
 using System;
 using System.Collections.Generic;
@@ -9,6 +10,7 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Threading.Tasks;
 
 namespace PuppetBotClient.Views
 {
@@ -76,10 +78,10 @@ namespace PuppetBotClient.Views
             _connectionStatusIcons[connectionStatus].IsVisible = true;
         }
 
-        public void SetUserViewModel(DiscordUserViewModel userModel)
+        public async Task SetUserViewModel(DiscordUserViewModel userModel)
         {
             UsernameText.Text = userModel.Username;
-            UserAvatarImage.ImageSource = GetImageFromUrl(userModel.AvatarImageUrl);
+            UserAvatarImage.ImageSource = await UrlImageHelper.GetImageFromUrl(userModel.AvatarImageUrl);
             UserAvatarImage.HyperLink = userModel.BotManagementUrl;
             UserAvatarImage.HyperLinkToolTip = "Open Bot\nSettings\n(web)";
         }
@@ -106,25 +108,6 @@ namespace PuppetBotClient.Views
         {
             SelectServerComboBox.IsEnabled = isEnabled;
             SelectChannelComboBox.IsEnabled = isEnabled;
-        }
-
-        private static IBitmap GetImageFromUrl(string imageUrl)
-        {
-            using (var webClient = new WebClient())
-            {
-                var stream = webClient.OpenRead(imageUrl);
-                var bitmap = new System.Drawing.Bitmap(stream);
-                var tempStream = new MemoryStream();
-                bitmap.Save(tempStream, ImageFormat.Bmp);
-                tempStream.Seek(0, SeekOrigin.Begin);
-
-                var uiBitmap = new Bitmap(tempStream);
-
-                stream.Flush();
-                stream.Close();
-
-                return uiBitmap;
-            }
         }
 
         public enum ConnectionStatus

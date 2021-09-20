@@ -7,6 +7,7 @@ using Avalonia.Threading;
 using Discord.Net;
 using PuppetBotClient.Discord;
 using PuppetBotClient.ViewModels.Discord;
+using PuppetBotClient.ViewModels.Emoji;
 using System;
 
 namespace PuppetBotClient.Views
@@ -17,6 +18,7 @@ namespace PuppetBotClient.Views
         private CheckBox PressEnterSendCheckbox { get; }
         private Button SendMessageButton { get; }
         private Button EditMessageButton { get; }
+        private Button EmojisButton { get; }
         private TextBox MessageTextBox { get; }
         private TextBlock MessageHistoryTextBlock { get; }
         private ScrollViewer MessageHistoryScrollViewer { get; }
@@ -35,6 +37,7 @@ namespace PuppetBotClient.Views
             PressEnterSendCheckbox = this.Find<CheckBox>(nameof(PressEnterSendCheckbox));
             SendMessageButton = this.Find<Button>(nameof(SendMessageButton));
             EditMessageButton = this.Find<Button>(nameof(EditMessageButton));
+            EmojisButton = this.Find<Button>(nameof(EmojisButton));
             MessageTextBox = this.Find<TextBox>(nameof(MessageTextBox));
             MessageHistoryTextBlock = this.Find<TextBlock>(nameof(MessageHistoryTextBlock));
             MessageHistoryScrollViewer = this.Find<ScrollViewer>(nameof(MessageHistoryScrollViewer));
@@ -43,6 +46,7 @@ namespace PuppetBotClient.Views
             // Events
             SendMessageButton.Click += SendMessageButton_Clicked;
             EditMessageButton.Click += EditMessageButton_Click;
+            EmojisButton.Click += EmojisButton_Click;
             MessageTextBox.KeyUp += MessageTextBox_EnterPressed;
 
             // Discord
@@ -65,12 +69,13 @@ namespace PuppetBotClient.Views
         {
             Dispatcher.UIThread.InvokeAsync(async () => {
                 var currentUser = await _discordManager.GetCurrentDiscordUser();
-                var serverSelection = await _discordManager.GetServerSelection();
+                var serverSelection = await _discordManager.GetServerChannelSelection();
                 DiscordConnectionView.SetConnectionStatus(DiscordConnectionView.ConnectionStatus.Connected);
                 DiscordConnectionView.SetUserViewModel(currentUser);
                 DiscordConnectionView.SetChannelSelectionModel(serverSelection);
                 AddMessageHistory($"Connected as {currentUser.Username}");
                 EditMessageButton.IsEnabled = true;
+                EmojisButton.IsEnabled = true;
             });
         }
 
@@ -89,9 +94,9 @@ namespace PuppetBotClient.Views
 
         private void DiscordManager_UserUpdated(DiscordUserViewModel updatedUser)
         {
-            Dispatcher.UIThread.InvokeAsync(() =>
+            Dispatcher.UIThread.InvokeAsync(async () =>
             {
-                DiscordConnectionView.SetUserViewModel(updatedUser);
+                await DiscordConnectionView.SetUserViewModel(updatedUser);
             });
         }
 
@@ -107,6 +112,25 @@ namespace PuppetBotClient.Views
         public void SendMessageButton_Clicked(object sender, RoutedEventArgs e)
         {
             SendMessage();
+        }
+
+        private void EmojisButton_Click(object sender, RoutedEventArgs e)
+        {
+            var selectedServer = DiscordConnectionView.SelectedServer?.ServerId;
+            if (!selectedServer.HasValue)
+            {
+                return;
+            }
+
+            var emojiPicker = new EmojiPickerWindow();
+            emojiPicker.EmojiClicked += EmojiPicker_EmojiClicked;
+            emojiPicker.LoadEmojisAsync(_discordManager);
+            emojiPicker.Show();
+        }
+
+        private void EmojiPicker_EmojiClicked(object sender, EmojiViewModel emoji)
+        {
+            MessageTextBox.Text += emoji.ToDiscordMessageString();
         }
 
         private void EditMessageButton_Click(object sender, RoutedEventArgs e)

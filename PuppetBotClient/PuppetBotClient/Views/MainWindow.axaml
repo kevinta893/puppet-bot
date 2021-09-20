@@ -3,12 +3,12 @@
         xmlns:vm="clr-namespace:PuppetBotClient.ViewModels;assembly=PuppetBotClient"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" d:DesignWidth="450" d:DesignHeight="400"
+        mc:Ignorable="d" d:DesignWidth="450" d:DesignHeight="450"
         xmlns:views="clr-namespace:PuppetBotClient.Views"
         x:Class="PuppetBotClient.Views.MainWindow"
         Icon="/Assets/avalonia-logo.ico"
         Title="PuppetBot"
-        Width="450" Height="400" CanResize="False">
+        Width="450" Height="450" CanResize="False">
 
     <Design.DataContext>
         <vm:MainWindowViewModel/>
@@ -25,9 +25,10 @@
         <TextBlock Name="MessageHistoryTextBlock" Padding="10,0,0,0" Width="420" TextWrapping="Wrap"></TextBlock>
       </ScrollViewer>
     </Border>
-    <TextBox Name="MessageTextBox" AcceptsReturn="True" Width="390" Height="100" Canvas.Bottom="10" Canvas.Left="10"/>
-    <Button Name="SendMessageButton" Height="100" Canvas.Bottom="10" Canvas.Right="10">Send</Button>
+    <TextBox Name="MessageTextBox" TextWrapping="Wrap" AcceptsReturn="True" Width="390" Height="100" Canvas.Bottom="60" Canvas.Left="10"/>
+    <Button Name="SendMessageButton" Height="100" Canvas.Bottom="60" Canvas.Right="10">Send</Button>
     <Button Name="EditMessageButton" Height="30" Canvas.Top="65" Canvas.Right="10" IsEnabled="False">Edit Msg</Button>
-    <CheckBox Name="PressEnterSendCheckbox" Canvas.Bottom="115" Canvas.Left="10" IsChecked="false">Press enter to end</CheckBox>
+    <CheckBox Name="PressEnterSendCheckbox" Canvas.Bottom="165" Canvas.Left="10" IsChecked="false">Press enter to end</CheckBox>
+    <Button Name="EmojisButton" Width="40" Height="40" Canvas.Bottom="10" Canvas.Right="70" IsEnabled="False">Emoji</Button>  
   </Canvas>
 </Window>
