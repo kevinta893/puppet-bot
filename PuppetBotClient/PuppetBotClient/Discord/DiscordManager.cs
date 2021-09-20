@@ -64,7 +64,17 @@ namespace PuppetBotClient.Discord
                 return;
             }
 
-            var botToken = AppConfiguration.Settings.Discord.BotToken;
+            // Get command line bot token index if any
+            var commandArgs = Environment.GetCommandLineArgs();
+            var botTokenIndex = 0;
+            var hasBotIndexArg = commandArgs.Length > 1 && int.TryParse(commandArgs[1], out botTokenIndex);
+            if (!hasBotIndexArg)
+            {
+                botTokenIndex = 0;
+            }
+
+            // Start client
+            var botToken = AppConfiguration.Settings.Discord.BotTokens[botTokenIndex];
             await _discordClient.LoginAsync(TokenType.Bot, botToken);
             await _discordClient.StartAsync();
         }
@@ -101,10 +111,8 @@ namespace PuppetBotClient.Discord
                 var channels = await GetAllTextChannelsAsync(server);
                 allChannels.AddRange(channels);
             }
-            //await Task.WhenAll(allChannels);
 
             var channelDictionary = allChannels
-                //.SelectMany(channels => channels)
                 .GroupBy(channel => channel.GuildId)
                 .ToDictionary(g => g.Key, g => g.ToList());
 
@@ -114,7 +122,7 @@ namespace PuppetBotClient.Discord
                 {
                     Name = server.Name,
                     ServerId = server.Id,
-                    Channels = channelDictionary[server.Id].Select(channel => new DiscordChannelViewModel
+                    Channels = channelDictionary[server.Id].OrderBy(c => c.Position).Select(channel => new DiscordChannelViewModel
                     {
                         Name = channel.Name,
                         ChannelId = channel.Id,
