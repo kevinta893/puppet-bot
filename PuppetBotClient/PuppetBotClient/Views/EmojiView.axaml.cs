@@ -62,8 +62,6 @@ namespace PuppetBotClient.Views
             ToolTip.SetTip(EmojiPreview, $"{viewModel.Alias} {animatedTag}");
             ToolTip.SetTip(GifIndicator, $"{viewModel.Alias} {animatedTag}");
 
-            //Task.Run(async () =>
-            //{
             var imageUrl = viewModel.ImageUrl;
             var cachedImageStream = _imgCache.GetCachedImage(imageUrl);
             var imageSource = new Bitmap(cachedImageStream);
@@ -71,7 +69,6 @@ namespace PuppetBotClient.Views
             {
                 EmojiPreview.Source = imageSource;
             }, DispatcherPriority.Background);
-            //});
         }
 
         private void EmojiPreview_PointerReleased(object sender, PointerReleasedEventArgs e)

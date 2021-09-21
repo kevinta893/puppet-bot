@@ -16,6 +16,8 @@ namespace PuppetBotClient.ImageCache
         private const string CacheDbPath = "emoji_cache.db";
         private const string CachedImageCollectionName = "CachedImages";
 
+        private static LiteDatabase _db = new LiteDatabase(CacheDbPath);
+
         public ImageUrlCacher()
         {
             
@@ -28,31 +30,28 @@ namespace PuppetBotClient.ImageCache
         /// <returns></returns>
         public Stream GetCachedImage(string imageUrl)
         {
-            using (var db = new LiteDatabase(CacheDbPath))
+            var cache = _db.GetCollection<CachedImage>(CachedImageCollectionName);
+
+            var img = cache.Find(img => img.ImageKey == imageUrl).FirstOrDefault();
+            if (img == null)
             {
-                var cache = db.GetCollection<CachedImage>(CachedImageCollectionName);
-
-                var img = cache.Find(img => img.ImageKey == imageUrl).FirstOrDefault();
-                if (img == null)
-                {
-                    //Cache miss, fetch and store new version
-                    var imageExtension = Path.GetExtension(imageUrl);
-                    var imageName = Path.GetFileName(imageUrl);
-
-                    // Get and store image
-                    using (var urlImageStream = UrlImageHelper.GetImageStreamFromUrl(imageUrl))
-                    {
-                        StoreImageToCache(db, imageUrl, imageName, urlImageStream);
-                        urlImageStream.Close();
-                    }
-                }
+                //Cache miss, fetch and store new version
+                var imageExtension = Path.GetExtension(imageUrl);
+                var imageName = Path.GetFileName(imageUrl);
 
                 // Get and store image
-                var cachedStream = new MemoryStream();
-                db.FileStorage.Download(imageUrl, cachedStream);
-                cachedStream.Seek(0, SeekOrigin.Begin);
-                return cachedStream;
+                using (var urlImageStream = UrlImageHelper.GetImageStreamFromUrl(imageUrl))
+                {
+                    StoreImageToCache(_db, imageUrl, imageName, urlImageStream);
+                    urlImageStream.Close();
+                }
             }
+
+            // Get and store image
+            var cachedStream = new MemoryStream();
+            _db.FileStorage.Download(imageUrl, cachedStream);
+            cachedStream.Seek(0, SeekOrigin.Begin);
+            return cachedStream;
         }
 
         /// <summary>
