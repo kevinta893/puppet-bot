@@ -116,15 +116,15 @@ namespace PuppetBotClient.Views
 
         private void EmojisButton_Click(object sender, RoutedEventArgs e)
         {
-            var selectedServer = DiscordConnectionView.SelectedServer?.ServerId;
-            if (!selectedServer.HasValue)
+            var selectedServerId = DiscordConnectionView.SelectedServer?.ServerId;
+            if (!selectedServerId.HasValue)
             {
                 return;
             }
 
             var emojiPicker = new EmojiPickerWindow();
             emojiPicker.EmojiClicked += EmojiPicker_EmojiClicked;
-            emojiPicker.LoadEmojisAsync(_discordManager);
+            emojiPicker.LoadEmojisAsync(_discordManager, selectedServerId.Value);
             emojiPicker.Show();
         }
 

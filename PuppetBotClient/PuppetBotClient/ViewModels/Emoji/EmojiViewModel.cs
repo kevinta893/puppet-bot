@@ -9,12 +9,13 @@ namespace PuppetBotClient.ViewModels.Emoji
     {
         public ulong EmojiId { get; set; }
         public string Alias { get; set; }
-        public bool Animated { get; set; }
+        public bool IsAnimated { get; set; }
         public string ImageUrl { get; set; }
         
         public string ToDiscordMessageString()
         {
-            return $"<:{Alias}:{EmojiId}>";
+            var animatedFlag = IsAnimated ? "a" : "";
+            return $"<{animatedFlag}:{Alias}:{EmojiId}>";
         }
     }
 }

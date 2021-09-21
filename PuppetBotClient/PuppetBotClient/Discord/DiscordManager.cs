@@ -163,7 +163,7 @@ namespace PuppetBotClient.Discord
                 {
                     EmojiId = emoji.Id,
                     Alias = emoji.Name,
-                    Animated = emoji.Animated,
+                    IsAnimated = emoji.Animated,
                     ImageUrl = emoji.Url,
                 })
             };

@@ -28,9 +28,9 @@ namespace PuppetBotClient.Views
             AvaloniaXamlLoader.Load(this);
         }
 
-        public async Task LoadEmojisAsync(DiscordManager discord)
+        public async Task LoadEmojisAsync(DiscordManager discord, ulong guildId)
         {
-            var serverEmojis = await discord.GetServerEmojis();
+            var serverEmojis = new[] { await discord.GetServerEmoji(guildId) };
 
             foreach (var serverEmoji in serverEmojis)
             {
