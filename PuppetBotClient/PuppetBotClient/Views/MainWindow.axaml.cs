@@ -8,6 +8,7 @@ using Discord.Net;
 using PuppetBotClient.Discord;
 using PuppetBotClient.ViewModels.Discord;
 using PuppetBotClient.ViewModels.Emoji;
+using PuppetBotClient.Views.EmojiPicker;
 using System;
 
 namespace PuppetBotClient.Views

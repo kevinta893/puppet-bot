@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="100" d:DesignHeight="100"
              Width="100" Height="100"
-             x:Class="PuppetBotClient.Views.EmojiView">
+             x:Class="PuppetBotClient.Views.EmojiPicker.EmojiView">
   <Canvas>
     <Rectangle Name="EmojiBackground" Width="70" Height="70" Fill="Black"/>
     <Image Name="EmojiPreview" Width="70" Height="70" Stretch="Uniform"/>

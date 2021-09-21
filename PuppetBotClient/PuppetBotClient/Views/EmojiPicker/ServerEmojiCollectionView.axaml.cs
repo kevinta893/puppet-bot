@@ -1,13 +1,10 @@
-using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 using PuppetBotClient.ViewModels.Emoji;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
-namespace PuppetBotClient.Views
+namespace PuppetBotClient.Views.EmojiPicker
 {
     public partial class ServerEmojiCollectionView : UserControl
     {

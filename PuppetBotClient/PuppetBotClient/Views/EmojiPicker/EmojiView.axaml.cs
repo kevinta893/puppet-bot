@@ -9,7 +9,7 @@ using PuppetBotClient.ViewModels.Emoji;
 using System;
 using System.Threading.Tasks;
 
-namespace PuppetBotClient.Views
+namespace PuppetBotClient.Views.EmojiPicker
 {
     public partial class EmojiView : UserControl
     {

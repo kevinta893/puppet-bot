@@ -1,14 +1,12 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
-using Discord.WebSocket;
 using PuppetBotClient.Discord;
 using PuppetBotClient.ViewModels.Emoji;
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 
-namespace PuppetBotClient.Views
+namespace PuppetBotClient.Views.EmojiPicker
 {
     public partial class EmojiPickerWindow : Window
     {

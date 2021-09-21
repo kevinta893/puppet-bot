@@ -2,9 +2,9 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:views="clr-namespace:PuppetBotClient.Views"
+        xmlns:views="clr-namespace:PuppetBotClient.Views.EmojiPicker"
         mc:Ignorable="d" d:DesignWidth="450" d:DesignHeight="450"
-        x:Class="PuppetBotClient.Views.EmojiPickerWindow"
+        x:Class="PuppetBotClient.Views.EmojiPicker.EmojiPickerWindow"
         Icon="/Assets/avalonia-logo.ico"
         Title="Emoji Picker"
         Width="450" Height="450" CanResize="False">
