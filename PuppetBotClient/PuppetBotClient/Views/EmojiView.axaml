@@ -8,5 +8,6 @@
   <Canvas>
     <Rectangle Name="EmojiBackground" Width="70" Height="70" Fill="Black"/>
     <Image Name="EmojiPreview" Width="70" Height="70" Stretch="Uniform"/>
+    <Image Name="GifIndicator" Width="10" Height="10" Source="/Assets/gif-file.png" Stretch="Uniform"></Image>
   </Canvas>
 </UserControl>

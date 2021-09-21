@@ -62,7 +62,7 @@ namespace PuppetBotClient.Views
                 emojiIndex++;
             }
 
-            this.Height = ((rowCount) * EmojiHeight) + ServerNameLabel.Height;
+            this.Height = ((rowCount) * EmojiHeight) + ServerNameLabel.Height + 10;
         }
 
         private void EmojiView_Click(object sender, EmojiViewModel emoji)

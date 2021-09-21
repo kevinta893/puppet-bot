@@ -5,6 +5,7 @@
         xmlns:views="clr-namespace:PuppetBotClient.Views"
         mc:Ignorable="d" d:DesignWidth="450" d:DesignHeight="450"
         x:Class="PuppetBotClient.Views.EmojiPickerWindow"
+        Icon="/Assets/avalonia-logo.ico"
         Title="Emoji Picker"
         Width="450" Height="450" CanResize="False">
   <Canvas>

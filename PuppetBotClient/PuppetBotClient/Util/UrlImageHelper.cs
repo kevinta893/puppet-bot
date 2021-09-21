@@ -29,19 +29,5 @@ namespace PuppetBotClient.Util
                 return uiBitmap;
             }
         }
-
-        public static async Task<Stream> GetImageStreamFromUrl(string imageUrl)
-        {
-            using (var webClient = new WebClient())
-            {
-                var stream = webClient.OpenRead(imageUrl);
-                var bitmap = new System.Drawing.Bitmap(stream);
-                var tempStream = new MemoryStream();
-                bitmap.Save(tempStream, ImageFormat.Bmp);
-                tempStream.Seek(0, SeekOrigin.Begin);
-
-                return tempStream;
-            }
-        }
     }
 }

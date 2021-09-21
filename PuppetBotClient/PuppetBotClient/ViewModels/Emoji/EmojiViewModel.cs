@@ -1,9 +1,4 @@
-﻿using Avalonia.Media;
-using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace PuppetBotClient.ViewModels.Emoji
+﻿namespace PuppetBotClient.ViewModels.Emoji
 {
     public class EmojiViewModel
     {

@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.30309.148
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PuppetBotClient", "PuppetBotClient\PuppetBotClient.csproj", "{61EAEDE0-BCAA-4799-B424-A1C3E1FD8E68}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PuppetBotClient.ImageCache", "PuppetBotClient.ImageCache\PuppetBotClient.ImageCache.csproj", "{B7F7EC4A-3416-4935-91A1-C3B1CDBB67DC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PuppetBotClient.ImageCache", "PuppetBotClient.ImageCache\PuppetBotClient.ImageCache.csproj", "{B7F7EC4A-3416-4935-91A1-C3B1CDBB67DC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
