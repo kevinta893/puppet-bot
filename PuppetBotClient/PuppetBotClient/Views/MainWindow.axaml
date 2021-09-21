@@ -27,8 +27,8 @@
     </Border>
     <TextBox Name="MessageTextBox" TextWrapping="Wrap" AcceptsReturn="True" Width="390" Height="100" Canvas.Bottom="60" Canvas.Left="10"/>
     <Button Name="SendMessageButton" Height="100" Canvas.Bottom="60" Canvas.Right="10">Send</Button>
-    <Button Name="EditMessageButton" Height="30" Canvas.Top="65" Canvas.Right="10" IsEnabled="False">Edit Msg</Button>
+    <Button Name="EditMessageButton" Canvas.Bottom="162" Canvas.Right="100" IsEnabled="False">Edit Msg</Button>
     <CheckBox Name="PressEnterSendCheckbox" Canvas.Bottom="165" Canvas.Left="10" IsChecked="false">Press enter to end</CheckBox>
-    <Button Name="EmojisButton" Width="40" Height="40" Canvas.Bottom="10" Canvas.Right="70" IsEnabled="False">Emoji</Button>  
+    <Button Name="EmojisButton" Width="40" Height="40" Canvas.Bottom="10" Canvas.Right="70" IsEnabled="False" FontSize="15">🙂</Button>  
   </Canvas>
 </Window>
