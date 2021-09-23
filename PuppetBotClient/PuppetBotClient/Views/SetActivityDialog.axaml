@@ -1,0 +1,27 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="180"
+        x:Class="PuppetBotClient.Views.SetActivityDialog"
+        Width="400" Height="180"
+        CanResize="False"
+        Title="Set Activity">
+
+  <Canvas>
+    <TextBlock Canvas.Left="10" Canvas.Top="10" Width="350" Height="100" TextWrapping="Wrap">Statuses last as long as this client connection is maintained, otherwise they reset to empty. Set empty to clear.</TextBlock>
+    <TextBox Name="StatusTextBox" Canvas.Top="60" Canvas.Left="110" Width="270" MaxLength="128" Watermark="Game Name"></TextBox>
+
+    <TextBox Name="StreamUrlTextBox" Canvas.Top="90" Canvas.Left="10" Width="370" MaxLength="128" IsEnabled="False" Watermark="Twitch Stream URL"></TextBox>
+
+    <ComboBox Name="ActivityComboBox" SelectedIndex="0" Canvas.Top="60" Canvas.Left="10" Width="100">
+      <ComboBoxItem Tag="Playing">Playing</ComboBoxItem>
+      <ComboBoxItem Tag="Streaming">Streaming</ComboBoxItem>
+      <ComboBoxItem Tag="Listening">Listening</ComboBoxItem>
+      <ComboBoxItem Tag="Watching">Watching</ComboBoxItem>
+    </ComboBox>
+    
+    <Button Name="OkButton" Canvas.Right="10" Canvas.Bottom="10">Set Status</Button>
+    <Button Name="CancelButton" Canvas.Right="100" Canvas.Bottom="10">Cancel</Button>
+  </Canvas>
+</Window>

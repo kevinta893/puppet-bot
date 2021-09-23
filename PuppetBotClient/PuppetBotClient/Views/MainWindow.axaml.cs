@@ -6,6 +6,7 @@ using Avalonia.Markup.Xaml;
 using Avalonia.Threading;
 using Discord.Net;
 using PuppetBotClient.Discord;
+using PuppetBotClient.Models;
 using PuppetBotClient.ViewModels.Discord;
 using PuppetBotClient.ViewModels.Emoji;
 using PuppetBotClient.Views.EmojiPicker;
@@ -19,6 +20,7 @@ namespace PuppetBotClient.Views
         private CheckBox PressEnterSendCheckbox { get; }
         private Button SendMessageButton { get; }
         private Button EditMessageButton { get; }
+        private Button SetStatusButton { get; }
         private Button EmojisButton { get; }
         private TextBox MessageTextBox { get; }
         private TextBlock MessageHistoryTextBlock { get; }
@@ -30,7 +32,6 @@ namespace PuppetBotClient.Views
         {
             InitializeComponent();
 
-            //_discordManager = discordManager;
             _discordManager = new DiscordManager();
 
             // UI Controls
@@ -38,6 +39,7 @@ namespace PuppetBotClient.Views
             PressEnterSendCheckbox = this.Find<CheckBox>(nameof(PressEnterSendCheckbox));
             SendMessageButton = this.Find<Button>(nameof(SendMessageButton));
             EditMessageButton = this.Find<Button>(nameof(EditMessageButton));
+            SetStatusButton = this.Find<Button>(nameof(SetStatusButton));
             EmojisButton = this.Find<Button>(nameof(EmojisButton));
             MessageTextBox = this.Find<TextBox>(nameof(MessageTextBox));
             MessageHistoryTextBlock = this.Find<TextBlock>(nameof(MessageHistoryTextBlock));
@@ -47,6 +49,7 @@ namespace PuppetBotClient.Views
             // Events
             SendMessageButton.Click += SendMessageButton_Clicked;
             EditMessageButton.Click += EditMessageButton_Click;
+            SetStatusButton.Click += SetStatusButton_Click;
             EmojisButton.Click += EmojisButton_Click;
             MessageTextBox.KeyUp += MessageTextBox_EnterPressed;
 
@@ -57,6 +60,36 @@ namespace PuppetBotClient.Views
 
             this.Initialized += MainWindow_Initialized;
             StartDiscordConnection();
+        }
+
+        private async void SetStatusButton_Click(object sender, RoutedEventArgs e)
+        {
+            var selectedServerId = DiscordConnectionView.SelectedServer?.ServerId;
+            if (!selectedServerId.HasValue)
+            {
+                return;
+            }
+
+            var emojiPicker = new SetActivityDialog();
+            var dialogResult = await emojiPicker.ShowDialog<SetActivityResultModel>(this);
+
+            if (dialogResult == null)
+            {
+                return;
+            }
+
+            if (dialogResult.ClearActivity)
+            {
+                // Clear status
+                _discordManager.ClearGameActivityAsync();
+                AddMessageHistory($"[GameActivity] Game activity cleared");
+            }
+            else
+            {
+                // Set status
+                _discordManager.SetGameAsync(dialogResult.ActivityName, dialogResult.StreamUrl, dialogResult.ActivityType);
+                AddMessageHistory($"[GameActivity] Game activity set to \"{dialogResult.ActivityType} {dialogResult.ActivityName}\"");
+            }
         }
 
         private void InitializeComponent()
@@ -77,6 +110,7 @@ namespace PuppetBotClient.Views
                 AddMessageHistory($"Connected as {currentUser.Username}");
                 EditMessageButton.IsEnabled = true;
                 EmojisButton.IsEnabled = true;
+                SetStatusButton.IsEnabled = true;
             });
         }
 

@@ -200,5 +200,15 @@ namespace PuppetBotClient.Discord
             var message = await channel.GetMessageAsync(messageId) as IUserMessage;
             await message.ModifyAsync(msg => msg.Content = editedMessage);
         }
+
+        public async Task SetGameAsync(string status, string streamUrl, ActivityType activityType)
+        {
+            await _discordClient.SetGameAsync(status, streamUrl, activityType);           
+        }
+
+        public async Task ClearGameActivityAsync()
+        {
+            await _discordClient.SetGameAsync(null);
+        }
     }
 }
