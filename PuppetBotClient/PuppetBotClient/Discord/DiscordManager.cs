@@ -216,5 +216,11 @@ namespace PuppetBotClient.Discord
         {
             await _discordClient.SetStatusAsync(status);
         }
+
+        public async Task TriggerTypingAsync(ulong channelId)
+        {
+            var channel = (IMessageChannel) _discordClient.GetChannel(channelId);
+            await channel.TriggerTypingAsync();
+        }
     }
 }

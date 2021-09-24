@@ -25,6 +25,7 @@ namespace PuppetBotClient.Views
         private Button EditMessageButton { get; }
         private Button SetStatusButton { get; }
         private Button EmojisButton { get; }
+        private Button TriggerTypingButton { get; }
         private TextBox MessageTextBox { get; }
         private TextBlock MessageHistoryTextBlock { get; }
         private ScrollViewer MessageHistoryScrollViewer { get; }
@@ -48,6 +49,7 @@ namespace PuppetBotClient.Views
             MessageHistoryTextBlock = this.Find<TextBlock>(nameof(MessageHistoryTextBlock));
             MessageHistoryScrollViewer = this.Find<ScrollViewer>(nameof(MessageHistoryScrollViewer));
             StatusComboBox = this.Find<ComboBox>(nameof(StatusComboBox));
+            TriggerTypingButton = this.Find<Button>(nameof(TriggerTypingButton));
 
             // Events
             SendMessageButton.Click += SendMessageButton_Clicked;
@@ -56,6 +58,7 @@ namespace PuppetBotClient.Views
             EmojisButton.Click += EmojisButton_Click;
             MessageTextBox.KeyUp += MessageTextBox_EnterPressed;
             StatusComboBox.SelectionChanged += StatusComboBox_SelectionChanged;
+            TriggerTypingButton.Click += TriggerTypingButton_Click;
 
             // Discord
             _discordManager.Connected += DiscordManager_Connected;
@@ -86,6 +89,7 @@ namespace PuppetBotClient.Views
                 EmojisButton.IsEnabled = true;
                 SetStatusButton.IsEnabled = true;
                 StatusComboBox.IsEnabled = true;
+                TriggerTypingButton.IsEnabled = true;
             });
         }
 
@@ -136,6 +140,13 @@ namespace PuppetBotClient.Views
             emojiPicker.EmojiClicked += EmojiPicker_EmojiClicked;
             emojiPicker.LoadEmojisAsync(_discordManager, selectedServerId.Value);
             emojiPicker.Show();
+        }
+
+        private void TriggerTypingButton_Click(object sender, RoutedEventArgs e)
+        {
+            var currentChannelId = DiscordConnectionView.SelectedChannel.ChannelId;
+            _discordManager.TriggerTypingAsync(currentChannelId);
+            AddMessageHistory("[Typing] User is typing set for 10 seconds");
         }
 
         private void EmojiPicker_EmojiClicked(object sender, EmojiViewModel emoji)
