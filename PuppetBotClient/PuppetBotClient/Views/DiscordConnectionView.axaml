@@ -15,8 +15,8 @@
       <TextBlock Canvas.Top="50">Channel:</TextBlock>
       <ComboBox Name="SelectChannelComboBox" Canvas.Top="70" IsEnabled="False"></ComboBox>
     </Canvas>
-    <Image Name="DiscordDisconnectedIndicator" Width="20" Height="20" Canvas.Right="10" Canvas.Top="10" Stretch="Fill" Source="/Assets/red_circle.png" />
-    <Image Name="DiscordConnectingIndicator" Width="20" Height="20" Canvas.Right="10" Canvas.Top="10" Stretch="Fill" Source="/Assets/yellow_circle.png" IsVisible="False"/>
-    <Image Name="DiscordConnectedIndicator" Width="20" Height="20" Canvas.Right="10" Canvas.Top="10" Stretch="Fill" Source="/Assets/green_circle.png" IsVisible="False"/>
+    <Image Name="DiscordDisconnectedIndicator" Width="20" Height="20" Canvas.Right="10" Canvas.Top="10" Stretch="Fill" Source="/Assets/red_circle.png" ToolTip.Tip="Disconnected"/>
+    <Image Name="DiscordConnectingIndicator" Width="20" Height="20" Canvas.Right="10" Canvas.Top="10" Stretch="Fill" Source="/Assets/yellow_circle.png" IsVisible="False" ToolTip.Tip="Connecting"/>
+    <Image Name="DiscordConnectedIndicator" Width="20" Height="20" Canvas.Right="10" Canvas.Top="10" Stretch="Fill" Source="/Assets/green_circle.png" IsVisible="False" ToolTip.Tip="Connected"/>
   </Canvas>
 </UserControl>
