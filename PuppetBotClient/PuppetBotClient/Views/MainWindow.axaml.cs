@@ -21,6 +21,7 @@ namespace PuppetBotClient.Views
         private DiscordConnectionView DiscordConnectionView { get; }
         private ComboBox StatusComboBox { get; }
         private CheckBox PressEnterSendCheckbox { get; }
+        private CheckBox AutoTriggerTypingCheckbox { get; }
         private Button SendMessageButton { get; }
         private Button EditMessageButton { get; }
         private Button SetStatusButton { get; }
@@ -41,6 +42,7 @@ namespace PuppetBotClient.Views
             // UI Controls
             DiscordConnectionView = this.Find<DiscordConnectionView>(nameof(DiscordConnectionView));
             PressEnterSendCheckbox = this.Find<CheckBox>(nameof(PressEnterSendCheckbox));
+            AutoTriggerTypingCheckbox = this.Find<CheckBox>(nameof(AutoTriggerTypingCheckbox));
             SendMessageButton = this.Find<Button>(nameof(SendMessageButton));
             EditMessageButton = this.Find<Button>(nameof(EditMessageButton));
             SetStatusButton = this.Find<Button>(nameof(SetStatusButton));
@@ -59,6 +61,7 @@ namespace PuppetBotClient.Views
             MessageTextBox.KeyUp += MessageTextBox_EnterPressed;
             StatusComboBox.SelectionChanged += StatusComboBox_SelectionChanged;
             TriggerTypingButton.Click += TriggerTypingButton_Click;
+            MessageTextBox.KeyUp += MessageTextBox_KeyUp;
 
             // Discord
             _discordManager.Connected += DiscordManager_Connected;
@@ -90,6 +93,8 @@ namespace PuppetBotClient.Views
                 SetStatusButton.IsEnabled = true;
                 StatusComboBox.IsEnabled = true;
                 TriggerTypingButton.IsEnabled = true;
+                MessageTextBox.IsEnabled = true;
+                SendMessageButton.IsEnabled = true;
             });
         }
 
@@ -240,6 +245,26 @@ namespace PuppetBotClient.Views
             }
 
             SendMessage();
+        }
+
+        private DateTimeOffset _lastTriggerTypingTime = DateTimeOffset.MinValue;
+        private const int NextTypingTriggerTimeMillis = 2000;
+        private void MessageTextBox_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (!(AutoTriggerTypingCheckbox.IsChecked ?? false))
+            {
+                return;
+            }
+
+            var millisSinceLastTrigger = (DateTimeOffset.UtcNow - _lastTriggerTypingTime).TotalMilliseconds;
+
+            if (millisSinceLastTrigger > NextTypingTriggerTimeMillis)
+            {
+                var currentChannelId = DiscordConnectionView.SelectedChannel.ChannelId;
+                _discordManager.TriggerTypingAsync(currentChannelId);
+                _lastTriggerTypingTime = DateTimeOffset.UtcNow;
+                AddMessageHistory("derp");
+            }
         }
 
         #endregion

@@ -35,11 +35,12 @@
         <TextBlock Name="MessageHistoryTextBlock" Padding="10,0,0,0" Width="420" TextWrapping="Wrap"></TextBlock>
       </ScrollViewer>
     </Border>
-    <TextBox Name="MessageTextBox" TextWrapping="Wrap" AcceptsReturn="True" Width="390" Height="100" Canvas.Bottom="60" Canvas.Left="10"/>
-    <Button Name="SendMessageButton" Height="100" Canvas.Bottom="60" Canvas.Right="10">Send</Button>
+    <TextBox Name="MessageTextBox" TextWrapping="Wrap" AcceptsReturn="True" Width="390" Height="100" Canvas.Bottom="60" Canvas.Left="10" IsEnabled="false"/>
+    <Button Name="SendMessageButton" Height="100" Canvas.Bottom="60" Canvas.Right="10" IsEnabled="False">Send</Button>
     <Button Name="EditMessageButton" Canvas.Bottom="162" Canvas.Right="100" IsEnabled="False" ToolTip.Tip="Opens a window to edit a message on the current channel">Edit Msg</Button>
-    <CheckBox Name="PressEnterSendCheckbox" Canvas.Bottom="165" Canvas.Left="10" IsChecked="false">Send on Enter</CheckBox>
-    
+    <CheckBox Name="PressEnterSendCheckbox" Canvas.Bottom="165" Canvas.Left="10" IsChecked="false" ToolTip.Tip="When enabled, enter button will send message">Send on Enter</CheckBox>
+    <CheckBox Name="AutoTriggerTypingCheckbox" Canvas.Bottom="165" Canvas.Left="120" IsChecked="false" ToolTip.Tip="When enabled, typing will continuously trigger &quot;&lt;User&gt; is Typing...&quot; state for 10 seconds in the current channel">Auto Trigger Typing</CheckBox>
+
     <Button Name="EmojisButton" Width="40" Height="40" Canvas.Bottom="10" Canvas.Right="70" IsEnabled="False" FontSize="15">
       <ToolTip.Tip>
         <TextBlock FontSize="12">Shows emojis for the current server</TextBlock>
