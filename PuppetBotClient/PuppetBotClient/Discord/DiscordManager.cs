@@ -210,5 +210,10 @@ namespace PuppetBotClient.Discord
         {
             await _discordClient.SetGameAsync(null);
         }
+
+        public async Task SetStatusAsync(UserStatus status)
+        {
+            await _discordClient.SetStatusAsync(status);
+        }
     }
 }

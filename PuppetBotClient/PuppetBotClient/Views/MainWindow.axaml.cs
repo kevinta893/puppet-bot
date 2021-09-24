@@ -4,6 +4,7 @@ using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.Threading;
+using Discord;
 using Discord.Net;
 using PuppetBotClient.Discord;
 using PuppetBotClient.Models;
@@ -11,12 +12,14 @@ using PuppetBotClient.ViewModels.Discord;
 using PuppetBotClient.ViewModels.Emoji;
 using PuppetBotClient.Views.EmojiPicker;
 using System;
+using System.Collections.Generic;
 
 namespace PuppetBotClient.Views
 {
     public class MainWindow : Window
     {
         private DiscordConnectionView DiscordConnectionView { get; }
+        private ComboBox StatusComboBox { get; }
         private CheckBox PressEnterSendCheckbox { get; }
         private Button SendMessageButton { get; }
         private Button EditMessageButton { get; }
@@ -44,7 +47,7 @@ namespace PuppetBotClient.Views
             MessageTextBox = this.Find<TextBox>(nameof(MessageTextBox));
             MessageHistoryTextBlock = this.Find<TextBlock>(nameof(MessageHistoryTextBlock));
             MessageHistoryScrollViewer = this.Find<ScrollViewer>(nameof(MessageHistoryScrollViewer));
-
+            StatusComboBox = this.Find<ComboBox>(nameof(StatusComboBox));
 
             // Events
             SendMessageButton.Click += SendMessageButton_Clicked;
@@ -52,6 +55,7 @@ namespace PuppetBotClient.Views
             SetStatusButton.Click += SetStatusButton_Click;
             EmojisButton.Click += EmojisButton_Click;
             MessageTextBox.KeyUp += MessageTextBox_EnterPressed;
+            StatusComboBox.SelectionChanged += StatusComboBox_SelectionChanged;
 
             // Discord
             _discordManager.Connected += DiscordManager_Connected;
@@ -60,36 +64,6 @@ namespace PuppetBotClient.Views
 
             this.Initialized += MainWindow_Initialized;
             StartDiscordConnection();
-        }
-
-        private async void SetStatusButton_Click(object sender, RoutedEventArgs e)
-        {
-            var selectedServerId = DiscordConnectionView.SelectedServer?.ServerId;
-            if (!selectedServerId.HasValue)
-            {
-                return;
-            }
-
-            var emojiPicker = new SetActivityDialog();
-            var dialogResult = await emojiPicker.ShowDialog<SetActivityResultModel>(this);
-
-            if (dialogResult == null)
-            {
-                return;
-            }
-
-            if (dialogResult.ClearActivity)
-            {
-                // Clear status
-                _discordManager.ClearGameActivityAsync();
-                AddMessageHistory($"[GameActivity] Game activity cleared");
-            }
-            else
-            {
-                // Set status
-                _discordManager.SetGameAsync(dialogResult.ActivityName, dialogResult.StreamUrl, dialogResult.ActivityType);
-                AddMessageHistory($"[GameActivity] Game activity set to \"{dialogResult.ActivityType} {dialogResult.ActivityName}\"");
-            }
         }
 
         private void InitializeComponent()
@@ -111,6 +85,7 @@ namespace PuppetBotClient.Views
                 EditMessageButton.IsEnabled = true;
                 EmojisButton.IsEnabled = true;
                 SetStatusButton.IsEnabled = true;
+                StatusComboBox.IsEnabled = true;
             });
         }
 
@@ -166,6 +141,54 @@ namespace PuppetBotClient.Views
         private void EmojiPicker_EmojiClicked(object sender, EmojiViewModel emoji)
         {
             MessageTextBox.Text += emoji.ToDiscordMessageString();
+        }
+
+        private static readonly IReadOnlyDictionary<string, UserStatus> _statusMapping = new Dictionary<string, UserStatus>()
+        {
+            ["Online"] = UserStatus.Online,
+            ["Offline"] = UserStatus.Offline,
+            ["AFK"] = UserStatus.AFK,
+            ["Idle"] = UserStatus.Idle,
+            ["Do Not Disturb"] = UserStatus.DoNotDisturb,
+            ["Invisible"] = UserStatus.Invisible,
+        };
+        private void StatusComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var selectedStatus = StatusComboBox.SelectedItem as ComboBoxItem;
+            var status = _statusMapping[selectedStatus.Content.ToString()];
+
+            _discordManager.SetStatusAsync(status);
+            AddMessageHistory($"[UserStatus] Status set to {status}");
+        }
+
+        private async void SetStatusButton_Click(object sender, RoutedEventArgs e)
+        {
+            var selectedServerId = DiscordConnectionView.SelectedServer?.ServerId;
+            if (!selectedServerId.HasValue)
+            {
+                return;
+            }
+
+            var emojiPicker = new SetActivityDialog();
+            var dialogResult = await emojiPicker.ShowDialog<SetActivityResultModel>(this);
+
+            if (dialogResult == null)
+            {
+                return;
+            }
+
+            if (dialogResult.ClearActivity)
+            {
+                // Clear status
+                _discordManager.ClearGameActivityAsync();
+                AddMessageHistory($"[GameActivity] Game activity cleared");
+            }
+            else
+            {
+                // Set status
+                _discordManager.SetGameAsync(dialogResult.ActivityName, dialogResult.StreamUrl, dialogResult.ActivityType);
+                AddMessageHistory($"[GameActivity] Game activity set to \"{dialogResult.ActivityType} {dialogResult.ActivityName}\"");
+            }
         }
 
         private void EditMessageButton_Click(object sender, RoutedEventArgs e)
