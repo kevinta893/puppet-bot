@@ -263,7 +263,6 @@ namespace PuppetBotClient.Views
                 var currentChannelId = DiscordConnectionView.SelectedChannel.ChannelId;
                 _discordManager.TriggerTypingAsync(currentChannelId);
                 _lastTriggerTypingTime = DateTimeOffset.UtcNow;
-                AddMessageHistory("derp");
             }
         }
 
