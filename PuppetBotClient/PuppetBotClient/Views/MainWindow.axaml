@@ -38,7 +38,7 @@
     <TextBox Name="MessageTextBox" TextWrapping="Wrap" AcceptsReturn="True" Width="390" Height="100" Canvas.Bottom="60" Canvas.Left="10"/>
     <Button Name="SendMessageButton" Height="100" Canvas.Bottom="60" Canvas.Right="10">Send</Button>
     <Button Name="EditMessageButton" Canvas.Bottom="162" Canvas.Right="100" IsEnabled="False" ToolTip.Tip="Opens a window to edit a message on the current channel">Edit Msg</Button>
-    <CheckBox Name="PressEnterSendCheckbox" Canvas.Bottom="165" Canvas.Left="10" IsChecked="false">Press enter to end</CheckBox>
+    <CheckBox Name="PressEnterSendCheckbox" Canvas.Bottom="165" Canvas.Left="10" IsChecked="false">Send on Enter</CheckBox>
     
     <Button Name="EmojisButton" Width="40" Height="40" Canvas.Bottom="10" Canvas.Right="70" IsEnabled="False" FontSize="15">
       <ToolTip.Tip>
