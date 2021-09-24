@@ -127,6 +127,7 @@ namespace PuppetBotClient.Discord
                     {
                         Name = channel.Name,
                         ChannelId = channel.Id,
+                        SortNo = channel.Position,
                     }),
                 })
                 .ToDictionary(serverModel => serverModel.ServerId, serverModel => serverModel)

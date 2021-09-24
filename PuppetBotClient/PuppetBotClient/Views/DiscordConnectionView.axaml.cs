@@ -95,7 +95,7 @@ namespace PuppetBotClient.Views
             {
                 SelectChannelComboBox.Items = Enumerable.Empty<DiscordChannelSelectionViewModel>();
                 var selectedServer = SelectServerComboBox.SelectedItem as DiscordServerViewModel;
-                SelectChannelComboBox.Items = selectedServer.Channels;
+                SelectChannelComboBox.Items = selectedServer.Channels.OrderBy(ch => ch.SortNo);
                 SelectChannelComboBox.SelectedIndex = 0;
             };
 
