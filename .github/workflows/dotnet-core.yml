@@ -28,7 +28,7 @@ jobs:
     - name: Publish
       run: |
         cd PuppetBotClient
-        dotnet publish -r win-x86 --configuration Release --nologo -p:PublishSingleFile=true --self-contained true -o ./Publish
+        dotnet publish PuppetBotClient -r win-x86 --configuration Release --nologo -p:PublishSingleFile=true --self-contained true -o ./Publish
         rm ./Publish/*.pdb
         cp ../README.md ./Publish
         cp ../LICENSE ./Publish
