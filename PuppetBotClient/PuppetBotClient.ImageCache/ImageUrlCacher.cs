@@ -16,11 +16,47 @@ namespace PuppetBotClient.ImageCache
         private const string CacheDbPath = "emoji_cache.db";
         private const string CachedImageCollectionName = "CachedImages";
 
-        private static LiteDatabase _db = new LiteDatabase(CacheDbPath);
+        private readonly LiteDatabase _db;
 
-        public ImageUrlCacher()
+        private static ImageUrlCacher _instance;
+
+        /// <summary>
+        /// Initializes the URL cacher with a named db cache
+        /// </summary>
+        /// <param name="name"></param>
+        public static void InitInstance(string name)
         {
-            
+            if (_instance == null)
+            {
+                _instance = new ImageUrlCacher(name);
+            }
+        }
+
+        /// <summary>
+        /// Gets the singleton instance of the url cacher
+        /// </summary>
+        public static ImageUrlCacher Instance
+        {
+            get
+            {
+                if (_instance == null)
+                {
+                    throw new InvalidOperationException($"{nameof(ImageUrlCacher)} needs to be initialized first before use.");
+                }
+
+                return _instance;
+            }
+        }
+
+        /// <summary>
+        /// Create a image cache. Note that this cache db cannot be
+        /// shared across processes and name must be unique
+        /// </summary>
+        /// <param name="name"></param>
+        private ImageUrlCacher(string name)
+        {
+            _db = new LiteDatabase($"{name}_{CacheDbPath}");
+
         }
 
         /// <summary>

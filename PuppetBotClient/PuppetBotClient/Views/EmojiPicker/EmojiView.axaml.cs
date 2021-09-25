@@ -19,7 +19,7 @@ namespace PuppetBotClient.Views.EmojiPicker
 
         private EmojiViewModel _emojiViewModel;
 
-        private static readonly ImageUrlCacher _imgCache = new ImageUrlCacher();
+        private readonly ImageUrlCacher _imgCache;
 
         private const float GifIndicatorScale = 0.5f;      //Percent scale of the emoji preview
 
@@ -35,6 +35,8 @@ namespace PuppetBotClient.Views.EmojiPicker
 
             EmojiBackground.PointerReleased += EmojiPreview_PointerReleased;
             EmojiPreview.PointerReleased += EmojiPreview_PointerReleased;
+
+            _imgCache = ImageUrlCacher.Instance;
         }
 
         public void SetHeight(int height)

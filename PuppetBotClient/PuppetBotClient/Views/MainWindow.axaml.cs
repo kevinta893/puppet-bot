@@ -7,6 +7,7 @@ using Avalonia.Threading;
 using Discord;
 using Discord.Net;
 using PuppetBotClient.Discord;
+using PuppetBotClient.ImageCache;
 using PuppetBotClient.Models;
 using PuppetBotClient.ViewModels.Discord;
 using PuppetBotClient.ViewModels.Emoji;
@@ -84,10 +85,13 @@ namespace PuppetBotClient.Views
             Dispatcher.UIThread.InvokeAsync(async () => {
                 var currentUser = await _discordManager.GetCurrentDiscordUser();
                 var serverSelection = await _discordManager.GetServerChannelSelection();
+                ImageUrlCacher.InitInstance(currentUser.Username);
+
                 DiscordConnectionView.SetConnectionStatus(DiscordConnectionView.ConnectionStatus.Connected);
                 DiscordConnectionView.SetUserViewModel(currentUser);
                 DiscordConnectionView.SetChannelSelectionModel(serverSelection);
                 AddMessageHistory($"Connected as {currentUser.Username}");
+
                 EditMessageButton.IsEnabled = true;
                 EmojisButton.IsEnabled = true;
                 SetStatusButton.IsEnabled = true;
