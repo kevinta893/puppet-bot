@@ -4,46 +4,67 @@ using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.Threading;
+using Discord;
 using Discord.Net;
 using PuppetBotClient.Discord;
+using PuppetBotClient.ImageCache;
+using PuppetBotClient.Models;
 using PuppetBotClient.ViewModels.Discord;
+using PuppetBotClient.ViewModels.Emoji;
+using PuppetBotClient.Views.EmojiPicker;
 using System;
+using System.Collections.Generic;
 
 namespace PuppetBotClient.Views
 {
     public class MainWindow : Window
     {
         private DiscordConnectionView DiscordConnectionView { get; }
+        private ComboBox StatusComboBox { get; }
         private CheckBox PressEnterSendCheckbox { get; }
+        private CheckBox AutoTriggerTypingCheckbox { get; }
         private Button SendMessageButton { get; }
         private Button EditMessageButton { get; }
+        private Button SetStatusButton { get; }
+        private Button EmojisButton { get; }
+        private Button TriggerTypingButton { get; }
         private TextBox MessageTextBox { get; }
         private TextBlock MessageHistoryTextBlock { get; }
         private ScrollViewer MessageHistoryScrollViewer { get; }
 
         private DiscordManager _discordManager;
 
+        private DiscordUserViewModel _currentUser;
+
         public MainWindow()
         {
             InitializeComponent();
 
-            //_discordManager = discordManager;
             _discordManager = new DiscordManager();
 
             // UI Controls
             DiscordConnectionView = this.Find<DiscordConnectionView>(nameof(DiscordConnectionView));
             PressEnterSendCheckbox = this.Find<CheckBox>(nameof(PressEnterSendCheckbox));
+            AutoTriggerTypingCheckbox = this.Find<CheckBox>(nameof(AutoTriggerTypingCheckbox));
             SendMessageButton = this.Find<Button>(nameof(SendMessageButton));
             EditMessageButton = this.Find<Button>(nameof(EditMessageButton));
+            SetStatusButton = this.Find<Button>(nameof(SetStatusButton));
+            EmojisButton = this.Find<Button>(nameof(EmojisButton));
             MessageTextBox = this.Find<TextBox>(nameof(MessageTextBox));
             MessageHistoryTextBlock = this.Find<TextBlock>(nameof(MessageHistoryTextBlock));
             MessageHistoryScrollViewer = this.Find<ScrollViewer>(nameof(MessageHistoryScrollViewer));
-
+            StatusComboBox = this.Find<ComboBox>(nameof(StatusComboBox));
+            TriggerTypingButton = this.Find<Button>(nameof(TriggerTypingButton));
 
             // Events
             SendMessageButton.Click += SendMessageButton_Clicked;
             EditMessageButton.Click += EditMessageButton_Click;
+            SetStatusButton.Click += SetStatusButton_Click;
+            EmojisButton.Click += EmojisButton_Click;
             MessageTextBox.KeyUp += MessageTextBox_EnterPressed;
+            StatusComboBox.SelectionChanged += StatusComboBox_SelectionChanged;
+            TriggerTypingButton.Click += TriggerTypingButton_Click;
+            MessageTextBox.KeyUp += MessageTextBox_KeyUp;
 
             // Discord
             _discordManager.Connected += DiscordManager_Connected;
@@ -64,13 +85,22 @@ namespace PuppetBotClient.Views
         private void DiscordManager_Connected()
         {
             Dispatcher.UIThread.InvokeAsync(async () => {
-                var currentUser = await _discordManager.GetCurrentDiscordUser();
-                var serverSelection = await _discordManager.GetServerSelection();
+                var currentUser = _currentUser = await _discordManager.GetCurrentDiscordUser();
+                var serverSelection = await _discordManager.GetServerChannelSelection();
+                ImageUrlCacher.InitInstance(currentUser.Username);
+
                 DiscordConnectionView.SetConnectionStatus(DiscordConnectionView.ConnectionStatus.Connected);
                 DiscordConnectionView.SetUserViewModel(currentUser);
                 DiscordConnectionView.SetChannelSelectionModel(serverSelection);
                 AddMessageHistory($"Connected as {currentUser.Username}");
+
                 EditMessageButton.IsEnabled = true;
+                EmojisButton.IsEnabled = true;
+                SetStatusButton.IsEnabled = true;
+                StatusComboBox.IsEnabled = true;
+                TriggerTypingButton.IsEnabled = true;
+                MessageTextBox.IsEnabled = true;
+                SendMessageButton.IsEnabled = true;
             });
         }
 
@@ -89,9 +119,9 @@ namespace PuppetBotClient.Views
 
         private void DiscordManager_UserUpdated(DiscordUserViewModel updatedUser)
         {
-            Dispatcher.UIThread.InvokeAsync(() =>
+            Dispatcher.UIThread.InvokeAsync(async () =>
             {
-                DiscordConnectionView.SetUserViewModel(updatedUser);
+                await DiscordConnectionView.SetUserViewModel(updatedUser);
             });
         }
 
@@ -109,6 +139,84 @@ namespace PuppetBotClient.Views
             SendMessage();
         }
 
+        private void EmojisButton_Click(object sender, RoutedEventArgs e)
+        {
+            var selectedServerId = DiscordConnectionView.SelectedServer?.ServerId;
+            if (!selectedServerId.HasValue)
+            {
+                return;
+            }
+
+            var emojiPicker = new EmojiPickerWindow();
+            emojiPicker.SetNamedTitle(_currentUser.Username);
+            emojiPicker.EmojiClicked += EmojiPicker_EmojiClicked;
+            emojiPicker.LoadEmojisAsync(_discordManager, selectedServerId.Value);
+            emojiPicker.Show();
+        }
+
+        private void TriggerTypingButton_Click(object sender, RoutedEventArgs e)
+        {
+            var currentChannelId = DiscordConnectionView.SelectedChannel.ChannelId;
+            _discordManager.TriggerTypingAsync(currentChannelId);
+            AddMessageHistory("[Typing] User is typing set for 10 seconds");
+        }
+
+        private void EmojiPicker_EmojiClicked(object sender, EmojiViewModel emoji)
+        {
+            MessageTextBox.Text += emoji.ToDiscordMessageString();
+        }
+
+        private static readonly IReadOnlyDictionary<string, UserStatus> _statusMapping = new Dictionary<string, UserStatus>()
+        {
+            ["Online"] = UserStatus.Online,
+            ["Offline"] = UserStatus.Offline,
+            ["AFK"] = UserStatus.AFK,
+            ["Idle"] = UserStatus.Idle,
+            ["Do Not Disturb"] = UserStatus.DoNotDisturb,
+            ["Invisible"] = UserStatus.Invisible,
+        };
+        private void StatusComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var selectedStatus = StatusComboBox.SelectedItem as ComboBoxItem;
+            var status = _statusMapping[selectedStatus.Content.ToString()];
+
+            _discordManager.SetStatusAsync(status);
+            AddMessageHistory($"[UserStatus] Status set to {status}");
+        }
+
+        private async void SetStatusButton_Click(object sender, RoutedEventArgs e)
+        {
+            var selectedServerId = DiscordConnectionView.SelectedServer?.ServerId;
+            if (!selectedServerId.HasValue)
+            {
+                return;
+            }
+
+            var setActivityDialog = new SetActivityDialog();
+            setActivityDialog.SetNamedTitle(_currentUser.Username);
+
+
+            var dialogResult = await setActivityDialog.ShowDialog<SetActivityResultModel>(this);
+
+            if (dialogResult == null)
+            {
+                return;
+            }
+
+            if (dialogResult.ClearActivity)
+            {
+                // Clear status
+                _discordManager.ClearGameActivityAsync();
+                AddMessageHistory($"[GameActivity] Game activity cleared");
+            }
+            else
+            {
+                // Set status
+                _discordManager.SetGameAsync(dialogResult.ActivityName, dialogResult.StreamUrl, dialogResult.ActivityType);
+                AddMessageHistory($"[GameActivity] Game activity set to \"{dialogResult.ActivityType} {dialogResult.ActivityName}\"");
+            }
+        }
+
         private void EditMessageButton_Click(object sender, RoutedEventArgs e)
         {
             var channelId = DiscordConnectionView.SelectedChannel.ChannelId;
@@ -118,6 +226,7 @@ namespace PuppetBotClient.Views
             };
 
             var editWindow = new EditWindow();
+            editWindow.SetNamedTitle(_currentUser.Username);
             editWindow.SetDiscordManager(_discordManager);
             editWindow.SetEditViewModel(editViewModel);
             editWindow.Show();
@@ -147,6 +256,25 @@ namespace PuppetBotClient.Views
             }
 
             SendMessage();
+        }
+
+        private DateTimeOffset _lastTriggerTypingTime = DateTimeOffset.MinValue;
+        private const int NextTypingTriggerTimeMillis = 2000;
+        private void MessageTextBox_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (!(AutoTriggerTypingCheckbox.IsChecked ?? false))
+            {
+                return;
+            }
+
+            var millisSinceLastTrigger = (DateTimeOffset.UtcNow - _lastTriggerTypingTime).TotalMilliseconds;
+
+            if (millisSinceLastTrigger > NextTypingTriggerTimeMillis)
+            {
+                var currentChannelId = DiscordConnectionView.SelectedChannel.ChannelId;
+                _discordManager.TriggerTypingAsync(currentChannelId);
+                _lastTriggerTypingTime = DateTimeOffset.UtcNow;
+            }
         }
 
         #endregion

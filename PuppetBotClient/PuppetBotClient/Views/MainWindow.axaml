@@ -3,12 +3,12 @@
         xmlns:vm="clr-namespace:PuppetBotClient.ViewModels;assembly=PuppetBotClient"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" d:DesignWidth="450" d:DesignHeight="400"
+        mc:Ignorable="d" d:DesignWidth="450" d:DesignHeight="450"
         xmlns:views="clr-namespace:PuppetBotClient.Views"
         x:Class="PuppetBotClient.Views.MainWindow"
         Icon="/Assets/avalonia-logo.ico"
         Title="PuppetBot"
-        Width="450" Height="400" CanResize="False">
+        Width="450" Height="450" CanResize="False">
 
     <Design.DataContext>
         <vm:MainWindowViewModel/>
@@ -16,6 +16,16 @@
 
   <Canvas>
     <views:DiscordConnectionView Name="DiscordConnectionView" />
+    <Button Name="SetStatusButton" Canvas.Top="35" Canvas.Right="10" IsEnabled="False" ToolTip.Tip="Change the bot's game activity">Set Activity</Button>
+    <ComboBox Name="StatusComboBox" Canvas.Right="10" Canvas.Top="70" Width="110" SelectedIndex="0" IsEnabled="False" ToolTip.Tip="Sets the user status. It cannot override the status of another instance (e.g. actual bot server)">
+      <ComboBoxItem>Online</ComboBoxItem>
+      <ComboBoxItem>Idle</ComboBoxItem>
+      <ComboBoxItem>AFK</ComboBoxItem>
+      <ComboBoxItem>Do Not Disturb</ComboBoxItem>
+      <ComboBoxItem>Invisible</ComboBoxItem>
+      <ComboBoxItem>Offline</ComboBoxItem>
+    </ComboBox>
+    
     <Border BorderBrush="Green"
         BorderThickness="1"
         CornerRadius="2"
@@ -25,9 +35,24 @@
         <TextBlock Name="MessageHistoryTextBlock" Padding="10,0,0,0" Width="420" TextWrapping="Wrap"></TextBlock>
       </ScrollViewer>
     </Border>
-    <TextBox Name="MessageTextBox" AcceptsReturn="True" Width="390" Height="100" Canvas.Bottom="10" Canvas.Left="10"/>
-    <Button Name="SendMessageButton" Height="100" Canvas.Bottom="10" Canvas.Right="10">Send</Button>
-    <Button Name="EditMessageButton" Height="30" Canvas.Top="65" Canvas.Right="10" IsEnabled="False">Edit Msg</Button>
-    <CheckBox Name="PressEnterSendCheckbox" Canvas.Bottom="115" Canvas.Left="10" IsChecked="false">Press enter to end</CheckBox>
+    <TextBox Name="MessageTextBox" TextWrapping="Wrap" AcceptsReturn="True" Width="390" Height="100" Canvas.Bottom="60" Canvas.Left="10" IsEnabled="false"/>
+    <Button Name="SendMessageButton" Height="100" Canvas.Bottom="60" Canvas.Right="10" IsEnabled="False">Send</Button>
+    <Button Name="EditMessageButton" Canvas.Bottom="162" Canvas.Right="100" IsEnabled="False" ToolTip.Tip="Opens a window to edit a message on the current channel">Edit Msg</Button>
+    <CheckBox Name="PressEnterSendCheckbox" Canvas.Bottom="165" Canvas.Left="10" IsChecked="false" ToolTip.Tip="When enabled, enter button will send message">Send on Enter</CheckBox>
+    <CheckBox Name="AutoTriggerTypingCheckbox" Canvas.Bottom="165" Canvas.Left="120" IsChecked="false" ToolTip.Tip="When enabled, typing will continuously trigger &quot;&lt;User&gt; is Typing...&quot; state for 10 seconds in the current channel">Auto Trigger Typing</CheckBox>
+
+    <Button Name="EmojisButton" Width="40" Height="40" Canvas.Bottom="10" Canvas.Right="70" IsEnabled="False" FontSize="15">
+      <ToolTip.Tip>
+        <TextBlock FontSize="12">Shows emojis for the current server</TextBlock>
+      </ToolTip.Tip>
+      🙂
+    </Button>
+
+    <Button Name="TriggerTypingButton" Canvas.Bottom="10" Canvas.Right="150" Height="40" IsEnabled="False" FontSize="10">
+      <ToolTip.Tip>
+        <TextBlock FontSize="12">Triggers &quot;&lt;User&gt; is Typing...&quot; state for 10 seconds in the current channel</TextBlock>
+      </ToolTip.Tip>
+        Trigger&#x0a;Typing
+    </Button>
   </Canvas>
 </Window>

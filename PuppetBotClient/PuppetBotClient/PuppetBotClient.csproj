@@ -12,17 +12,19 @@
     <None Remove="Assets\green_circle.png" />
     <None Remove="Assets\red_circle.png" />
     <None Remove="Assets\yellow_circle.png" />
-    <Folder Include="Models\" />
     <Folder Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Avalonia" Version="0.10.6" />
-    <PackageReference Include="Avalonia.Desktop" Version="0.10.6" />
-    <PackageReference Include="Avalonia.ReactiveUI" Version="0.10.6" />
+    <PackageReference Include="Avalonia" Version="0.10.7" />
+    <PackageReference Include="Avalonia.Desktop" Version="0.10.7" />
+    <PackageReference Include="Avalonia.ReactiveUI" Version="0.10.7" />
     <PackageReference Include="Discord.Net.Core" Version="2.4.0" />
     <PackageReference Include="Discord.Net.Webhook" Version="2.4.0" />
     <PackageReference Include="Discord.Net.WebSocket" Version="2.4.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="5.0.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\PuppetBotClient.ImageCache\PuppetBotClient.ImageCache.csproj" />
   </ItemGroup>
   <ItemGroup>
     <AvaloniaXaml Update="Views\MainWindow.axaml">
@@ -32,6 +34,9 @@
   <ItemGroup>
     <Compile Update="Views\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.axaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\SetActivityDialog.axaml.cs">
+      <DependentUpon>SetActivityDialog.axaml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
