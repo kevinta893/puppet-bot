@@ -54,6 +54,11 @@ namespace PuppetBotClient.Views
             }
         }
 
+        public void SetNamedTitle(string name)
+        {
+            this.Title = $"{name}: {Title}";
+        }
+
         private void CancelButton_Click(object sender, Avalonia.Interactivity.RoutedEventArgs e)
         {
             Close();

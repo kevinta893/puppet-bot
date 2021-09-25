@@ -42,6 +42,11 @@ namespace PuppetBotClient.Views
             EnableEditMessageControls(false);
         }
 
+        public void SetNamedTitle(string name)
+        {
+            this.Title = $"{name}: {Title}";
+        }
+
         private void MessageTextBox_KeyUp(object sender, Avalonia.Input.KeyEventArgs e)
         {
             if (string.IsNullOrWhiteSpace(MessageTextBox.Text))

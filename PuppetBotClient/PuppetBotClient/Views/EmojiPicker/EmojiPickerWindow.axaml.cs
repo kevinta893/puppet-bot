@@ -26,6 +26,11 @@ namespace PuppetBotClient.Views.EmojiPicker
             AvaloniaXamlLoader.Load(this);
         }
 
+        public void SetNamedTitle(string name)
+        {
+            this.Title = $"{name}: {Title}";
+        }
+
         public async Task LoadEmojisAsync(DiscordManager discord, ulong guildId)
         {
             var serverEmojis = new[] { await discord.GetServerEmoji(guildId) };

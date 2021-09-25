@@ -34,6 +34,8 @@ namespace PuppetBotClient.Views
 
         private DiscordManager _discordManager;
 
+        private DiscordUserViewModel _currentUser;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -83,7 +85,7 @@ namespace PuppetBotClient.Views
         private void DiscordManager_Connected()
         {
             Dispatcher.UIThread.InvokeAsync(async () => {
-                var currentUser = await _discordManager.GetCurrentDiscordUser();
+                var currentUser = _currentUser = await _discordManager.GetCurrentDiscordUser();
                 var serverSelection = await _discordManager.GetServerChannelSelection();
                 ImageUrlCacher.InitInstance(currentUser.Username);
 
@@ -146,6 +148,7 @@ namespace PuppetBotClient.Views
             }
 
             var emojiPicker = new EmojiPickerWindow();
+            emojiPicker.SetNamedTitle(_currentUser.Username);
             emojiPicker.EmojiClicked += EmojiPicker_EmojiClicked;
             emojiPicker.LoadEmojisAsync(_discordManager, selectedServerId.Value);
             emojiPicker.Show();
@@ -189,8 +192,11 @@ namespace PuppetBotClient.Views
                 return;
             }
 
-            var emojiPicker = new SetActivityDialog();
-            var dialogResult = await emojiPicker.ShowDialog<SetActivityResultModel>(this);
+            var setActivityDialog = new SetActivityDialog();
+            setActivityDialog.SetNamedTitle(_currentUser.Username);
+
+
+            var dialogResult = await setActivityDialog.ShowDialog<SetActivityResultModel>(this);
 
             if (dialogResult == null)
             {
@@ -220,6 +226,7 @@ namespace PuppetBotClient.Views
             };
 
             var editWindow = new EditWindow();
+            editWindow.SetNamedTitle(_currentUser.Username);
             editWindow.SetDiscordManager(_discordManager);
             editWindow.SetEditViewModel(editViewModel);
             editWindow.Show();
