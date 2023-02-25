@@ -123,12 +123,15 @@ namespace PuppetBotClient.Discord
                 {
                     Name = server.Name,
                     ServerId = server.Id,
-                    Channels = channelDictionary[server.Id].OrderBy(c => c.Position).Select(channel => new DiscordChannelViewModel
-                    {
-                        Name = channel.Name,
-                        ChannelId = channel.Id,
-                        SortNo = channel.Position,
-                    }),
+                    Channels = channelDictionary[server.Id]
+                        .OrderBy(c => (c as SocketVoiceChannel) != null)
+                        .ThenBy(c => c.Position)
+                        .Select((channel, listIndex) => new DiscordChannelViewModel
+                        {
+                            Name = (channel as SocketVoiceChannel) != null ? $"🔊{channel.Name}" : $"💬{channel.Name}",
+                            ChannelId = channel.Id,
+                            SortNo = listIndex,
+                        }),
                 })
                 .ToDictionary(serverModel => serverModel.ServerId, serverModel => serverModel)
             };
